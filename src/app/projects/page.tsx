@@ -3,15 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
-  FolderGit2,
   Plus,
   Search,
   ExternalLink,
-  DollarSign,
-  TrendingUp,
-  FileText,
-  Clock,
   ArrowRight,
+  ChevronRight,
 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { StatusChip } from '@/components/StatusChip';
@@ -41,50 +37,52 @@ export default function ProjectsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] text-zinc-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FBFBFA] text-[#18181B] flex flex-col font-sans">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6 flex-1 w-full">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-5 flex-1 w-full">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E5E5E0] pb-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-zinc-900">
+            <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono">
+              <span>Apex Digital</span>
+              <span>/</span>
+              <span className="text-zinc-700 font-sans font-semibold">Projects</span>
+            </div>
+            <h1 className="text-xl font-bold tracking-tight text-zinc-900 mt-0.5">
               Projects & Scope Baselines
             </h1>
-            <p className="text-xs sm:text-sm text-zinc-500 mt-1">
-              Structured scopes, versioned SOW agreements, and active client request portals.
-            </p>
           </div>
 
           <Link
             href="/projects/new"
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs transition-colors self-start sm:self-auto"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded shadow-2xs transition-colors self-start sm:self-auto"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-3.5 h-3.5" />
             <span>New Project</span>
           </Link>
         </div>
 
         {/* Filter bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-white rounded-xl border border-zinc-200">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-white rounded border border-[#E5E5E0]">
           <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400" />
             <input
               type="text"
-              placeholder="Search by project, client, or code..."
+              placeholder="Search project, code, or client..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+              className="w-full pl-8 pr-3 py-1 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
             />
           </div>
 
-          <div className="flex items-center gap-2 self-end sm:self-auto">
-            <span className="text-xs text-zinc-500">Status:</span>
+          <div className="flex items-center gap-2 self-end sm:self-auto text-xs text-zinc-500 font-mono">
+            <span>Status:</span>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="text-xs border border-zinc-200 rounded-lg px-2.5 py-1.5 bg-white text-zinc-700 focus:outline-hidden"
+              className="text-xs border border-[#E5E5E0] rounded px-2 py-1 bg-white text-zinc-700 focus:outline-hidden"
             >
-              <option value="all">All Statuses</option>
+              <option value="all">All</option>
               <option value="active">Active</option>
               <option value="in_review">In Review</option>
               <option value="completed">Completed</option>
@@ -92,68 +90,68 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filtered.map((proj) => (
-            <div
-              key={proj.id}
-              className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs hover:border-zinc-300 transition-all flex flex-col justify-between space-y-4"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-[11px] font-mono font-bold text-zinc-400 bg-zinc-100 px-2 py-0.5 rounded">
+        {/* Projects Table */}
+        <div className="rounded border border-[#E5E5E0] bg-white overflow-hidden shadow-2xs">
+          <table className="w-full text-left text-xs">
+            <thead className="bg-[#FBFBFA] text-zinc-500 border-b border-[#E5E5E0] font-semibold text-[11px]">
+              <tr>
+                <th className="py-2.5 px-4 w-28">Code</th>
+                <th className="py-2.5 px-4">Project Title</th>
+                <th className="py-2.5 px-4">Client</th>
+                <th className="py-2.5 px-3">Fixed Baseline</th>
+                <th className="py-2.5 px-3">Recovered</th>
+                <th className="py-2.5 px-3">Status</th>
+                <th className="py-2.5 px-4 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-200 bg-white">
+              {filtered.map((proj) => (
+                <tr key={proj.id} className="hover:bg-zinc-50/70 transition-colors">
+                  <td className="py-3 px-4 font-mono text-zinc-500 font-semibold text-xs">
                     {proj.code}
-                  </span>
-                  <StatusChip status={proj.status} />
-                </div>
-
-                <Link
-                  href={`/projects/${proj.id}`}
-                  className="text-base font-bold text-zinc-900 hover:text-indigo-600 transition-colors block"
-                >
-                  {proj.name}
-                </Link>
-
-                <p className="text-xs text-zinc-500 mt-1">
-                  Client: <strong className="text-zinc-700">{proj.client_name}</strong> ({proj.company_name})
-                </p>
-
-                <div className="grid grid-cols-2 gap-2 mt-4 pt-4 border-t border-zinc-100 text-xs">
-                  <div>
-                    <span className="text-zinc-400 text-[10px] block uppercase font-medium">Original Contract</span>
-                    <span className="font-bold text-zinc-800">
-                      ${Number(proj.contract_value).toLocaleString()}
+                  </td>
+                  <td className="py-3 px-4 font-semibold text-zinc-900">
+                    <Link href={`/projects/${proj.id}`} className="hover:text-[#2547D0] transition-colors">
+                      {proj.name}
+                    </Link>
+                    <span className="text-[11px] text-zinc-400 block font-mono font-normal">
+                      Baseline Scope v{proj.active_scope_version}
                     </span>
-                  </div>
-                  <div>
-                    <span className="text-zinc-400 text-[10px] block uppercase font-medium">Recovered Revenue</span>
-                    <span className="font-bold text-emerald-600">
-                      +${Number(proj.recovered_revenue).toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-3 border-t border-zinc-100 flex items-center justify-between gap-2">
-                <Link
-                  href={`/portal/${proj.portal_token}`}
-                  target="_blank"
-                  className="inline-flex items-center gap-1 text-[11px] font-medium text-zinc-600 hover:text-zinc-900"
-                >
-                  <span>Client Portal</span>
-                  <ExternalLink className="w-3 h-3 text-zinc-400" />
-                </Link>
-
-                <Link
-                  href={`/projects/${proj.id}`}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-2xs transition-colors"
-                >
-                  <span>Manage Scope</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </Link>
-              </div>
-            </div>
-          ))}
+                  </td>
+                  <td className="py-3 px-4 text-zinc-700">
+                    <span className="font-medium text-zinc-900">{proj.client_name}</span>
+                    <span className="text-[11px] text-zinc-500 block">{proj.company_name}</span>
+                  </td>
+                  <td className="py-3 px-3 font-mono text-zinc-800 tabular-nums">
+                    ${Number(proj.contract_value).toLocaleString()}
+                  </td>
+                  <td className="py-3 px-3 font-mono font-bold text-emerald-700 tabular-nums">
+                    +${Number(proj.recovered_revenue).toLocaleString()}
+                  </td>
+                  <td className="py-3 px-3">
+                    <StatusChip status={proj.status} />
+                  </td>
+                  <td className="py-3 px-4 text-right space-x-2">
+                    <Link
+                      href={`/portal/${proj.portal_token}`}
+                      target="_blank"
+                      className="inline-flex items-center gap-1 px-2 py-1 text-[11px] font-medium text-zinc-600 bg-white border border-[#E5E5E0] rounded hover:bg-zinc-50 transition-colors"
+                    >
+                      <span>Portal</span>
+                      <ExternalLink className="w-2.5 h-2.5 text-zinc-400" />
+                    </Link>
+                    <Link
+                      href={`/projects/${proj.id}`}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 text-[11px] font-medium text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded transition-colors"
+                    >
+                      <span>Manage</span>
+                      <ArrowRight className="w-2.5 h-2.5" />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </main>
     </div>

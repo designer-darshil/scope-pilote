@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Check, HelpCircle, Sparkles, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { Check, ArrowRight } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 
 export default function PricingPage() {
@@ -12,140 +12,138 @@ export default function PricingPage() {
     {
       name: 'Starter',
       price: billingCycle === 'monthly' ? 29 : 24,
-      description: 'Ideal for independent freelancers and solo consultants looking to curb scope creep.',
+      description: 'For solo freelancers and consultants managing 1–3 active client contracts.',
       features: [
-        '3 Active Projects',
-        '25 AI Scope Classifications/mo',
-        'Standard Statement of Work Extraction',
-        'Basic Client Intake Form',
+        '3 Active Monitored Projects',
+        '25 Scope Classifications / month',
+        'SOW Deliverable & Boundary Extraction',
+        'Tokenized Client Request Intake',
         'Digital Change Order Generator',
-        'Email Support',
+        'Immutable Event History',
       ],
       current: false,
-      cta: 'Start 14-Day Free Trial',
+      cta: 'Select Starter',
     },
     {
       name: 'Growth',
       price: billingCycle === 'monthly' ? 79 : 64,
-      description: 'For growing design, dev, and marketing studios managing multiple clients concurrently.',
+      description: 'For small development and design studios requiring full scope defense across all accounts.',
       features: [
         'Unlimited Active Projects',
-        '200 AI Scope Classifications/mo',
-        'Full SOW & Proposal PDF Parser',
-        'White-label Tokenized Client Portals',
-        'Client Digital Signature Sign-Off',
-        'Printable PDF Change Orders',
+        '200 Scope Classifications / month',
+        'Full PDF SOW & Agreement Parser',
+        'Tokenized Client Portal with SSL Sign-off',
+        'Printable / PDF Change Order Export',
         'Scope Drift Analytics & Recovery Metrics',
         '5 Team Member Seats',
       ],
       current: true,
       popular: true,
-      cta: 'Current Plan (Active Demo)',
+      cta: 'Current Plan (Active)',
     },
     {
-      name: 'Agency Scale',
+      name: 'Agency',
       price: billingCycle === 'monthly' ? 199 : 159,
-      description: 'For established agencies and software houses requiring multi-client audit compliance.',
+      description: 'For digital agencies requiring dedicated SLAs, webhooks, and compliance ledgers.',
       features: [
         'Unlimited Projects & Clients',
-        '1,000 AI Scope Classifications/mo',
-        'Custom Domain for Client Portals',
-        'Immutable Cryptographic Audit Export',
+        '1,000 Scope Classifications / month',
+        'Custom Domain for Client Intake Portals',
+        'Cryptographic Audit Ledger Export',
         'Webhook & Slack Integration',
-        'Unlimited Team Seats & Roles',
-        'Dedicated Priority SLA & Onboarding',
+        'Unlimited Seats & Role Permissions',
+        'Dedicated Onboarding & Priority SLA',
       ],
       current: false,
-      cta: 'Upgrade to Agency Scale',
+      cta: 'Upgrade to Agency',
     },
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] text-zinc-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FBFBFA] text-[#18181B] flex flex-col font-sans selection:bg-[#EFF3FE] selection:text-[#2547D0]">
       <Navbar />
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 space-y-16">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12 flex-1 w-full">
         {/* Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-4">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200/80 text-xs font-semibold text-indigo-700">
-            <Zap className="w-3.5 h-3.5 text-indigo-600" />
-            <span>ROI Guaranteed: Pays For Itself On Your First Change Order</span>
-          </div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900 sm:text-5xl">
-            Simple, Transparent Pricing
+        <div className="text-center max-w-xl mx-auto space-y-3">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 block">
+            Commercial Plans
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-zinc-900">
+            Predictable, Transparent Pricing
           </h1>
-          <p className="text-base text-zinc-600">
-            Stop losing thousands in free revisions. Recover billable hours with automated scope defense.
+          <p className="text-sm text-zinc-600 leading-relaxed">
+            Stop absorbing free scope creep. One approved change order typically covers an entire year of ScopePilot.
           </p>
 
           {/* Billing Switcher */}
-          <div className="pt-4 flex items-center justify-center gap-3 text-xs font-semibold">
-            <span className={billingCycle === 'monthly' ? 'text-zinc-900' : 'text-zinc-400'}>
-              Monthly Billing
+          <div className="pt-3 flex items-center justify-center gap-3 text-xs font-mono">
+            <span className={billingCycle === 'monthly' ? 'text-zinc-900 font-bold' : 'text-zinc-400'}>
+              Monthly
             </span>
             <button
               onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'annual' : 'monthly')}
-              className="w-12 h-6 bg-zinc-200 rounded-full p-1 transition-colors relative flex items-center"
+              className="w-10 h-5 bg-zinc-200 rounded-full p-0.5 transition-colors relative flex items-center"
             >
               <div
-                className={`w-4 h-4 rounded-full bg-indigo-600 transition-transform ${
-                  billingCycle === 'annual' ? 'translate-x-6' : 'translate-x-0'
+                className={`w-4 h-4 rounded-full bg-[#2547D0] transition-transform ${
+                  billingCycle === 'annual' ? 'translate-x-5' : 'translate-x-0'
                 }`}
               />
             </button>
-            <span className={billingCycle === 'annual' ? 'text-zinc-900' : 'text-zinc-400'}>
-              Annual (Save 20%)
+            <span className={billingCycle === 'annual' ? 'text-zinc-900 font-bold' : 'text-zinc-400'}>
+              Annual (20% off)
             </span>
           </div>
         </div>
 
         {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map((plan) => (
             <div
               key={plan.name}
-              className={`rounded-2xl p-8 flex flex-col justify-between transition-all relative ${
+              className={`rounded p-6 flex flex-col justify-between transition-all relative ${
                 plan.popular
-                  ? 'bg-white border-2 border-indigo-600 shadow-xl'
-                  : 'bg-white border border-zinc-200 shadow-2xs hover:border-zinc-300'
+                  ? 'bg-white border-2 border-[#2547D0] shadow-sm'
+                  : 'bg-white border border-[#E5E5E0] shadow-2xs'
               }`}
             >
               {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-indigo-600 text-white text-[11px] font-bold uppercase tracking-wider shadow-xs">
-                  Most Popular
+                <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.2 rounded bg-[#2547D0] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+                  Active Demo Plan
                 </div>
               )}
 
               <div>
-                <h3 className="text-lg font-bold text-zinc-900">{plan.name}</h3>
-                <p className="text-xs text-zinc-500 mt-1 min-h-[36px]">{plan.description}</p>
+                <h3 className="text-base font-bold text-zinc-900">{plan.name}</h3>
+                <p className="text-xs text-zinc-500 mt-1 min-h-[32px]">{plan.description}</p>
 
-                <div className="mt-6 mb-6">
-                  <span className="text-4xl font-extrabold tracking-tight text-zinc-900">
+                <div className="mt-4 mb-5 font-mono">
+                  <span className="text-3xl font-bold tracking-tight text-zinc-900">
                     ${plan.price}
                   </span>
-                  <span className="text-xs text-zinc-400 font-medium ml-1">/ month</span>
+                  <span className="text-xs text-zinc-400 font-sans ml-1">/ month</span>
                 </div>
 
-                <div className="border-t border-zinc-100 pt-6 space-y-3">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-zinc-500 block">
-                    What&apos;s Included:
+                <div className="border-t border-zinc-100 pt-4 space-y-2.5">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block">
+                    Plan Specifications:
                   </span>
                   {plan.features.map((feat) => (
-                    <div key={feat} className="flex items-start gap-2.5 text-xs text-zinc-700">
-                      <Check className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                    <div key={feat} className="flex items-start gap-2 text-xs text-zinc-700">
+                      <Check className="w-3.5 h-3.5 text-zinc-500 shrink-0 mt-0.5" />
                       <span>{feat}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-zinc-100">
+              <div className="mt-6 pt-4 border-t border-zinc-100">
                 <button
                   disabled={plan.current}
-                  className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-all ${
+                  className={`w-full py-1.5 px-3 rounded text-xs font-semibold transition-all ${
                     plan.popular
-                      ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-xs'
+                      ? 'bg-[#2547D0] text-white hover:bg-[#1D3BB3] shadow-2xs'
                       : 'bg-zinc-100 text-zinc-800 hover:bg-zinc-200'
                   }`}
                 >
@@ -157,25 +155,19 @@ export default function PricingPage() {
         </div>
 
         {/* FAQ Section */}
-        <div className="max-w-3xl mx-auto pt-12 space-y-6">
-          <h2 className="text-2xl font-bold text-zinc-900 text-center">Frequently Asked Questions</h2>
-          <div className="space-y-4">
-            <div className="p-5 bg-white rounded-xl border border-zinc-200">
-              <h4 className="text-sm font-bold text-zinc-900">Are AI suggestions legally binding?</h4>
-              <p className="text-xs text-zinc-600 mt-1.5 leading-relaxed">
-                No. As established in our platform guidelines, ScopePilot AI classification suggestions are strictly advisory and assist in discovering contractual discrepancies. All change orders, prices, and revisions require explicit human authorization from both agency and client.
+        <div className="max-w-2xl mx-auto pt-6 space-y-4">
+          <h2 className="text-lg font-bold text-zinc-900 text-center">Frequently Asked Questions</h2>
+          <div className="space-y-3">
+            <div className="p-4 bg-white rounded border border-[#E5E5E0]">
+              <h4 className="text-xs font-bold text-zinc-900">Are AI suggestions legally binding?</h4>
+              <p className="text-xs text-zinc-600 mt-1 leading-relaxed">
+                No. As established in our platform guidelines, ScopePilot AI classification suggestions are strictly advisory and identify discrepancies. All change orders, prices, and revisions require explicit human authorization.
               </p>
             </div>
-            <div className="p-5 bg-white rounded-xl border border-zinc-200">
-              <h4 className="text-sm font-bold text-zinc-900">Do clients need to create an account?</h4>
-              <p className="text-xs text-zinc-600 mt-1.5 leading-relaxed">
+            <div className="p-4 bg-white rounded border border-[#E5E5E0]">
+              <h4 className="text-xs font-bold text-zinc-900">Do clients need to create an account?</h4>
+              <p className="text-xs text-zinc-600 mt-1 leading-relaxed">
                 Never. Clients access their project intake portal and change order approval links via cryptographically secure, unguessable tokens. This eliminates friction and drastically increases approval speed.
-              </p>
-            </div>
-            <div className="p-5 bg-white rounded-xl border border-zinc-200">
-              <h4 className="text-sm font-bold text-zinc-900">Can I export Change Orders to PDF?</h4>
-              <p className="text-xs text-zinc-600 mt-1.5 leading-relaxed">
-                Yes. All change orders, statements of work, and scope audit histories can be exported or printed as high-resolution PDF documents with official digital signature stamps and IP logs.
               </p>
             </div>
           </div>

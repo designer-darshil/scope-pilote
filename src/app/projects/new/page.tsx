@@ -4,15 +4,12 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Sparkles,
-  FileText,
-  Upload,
-  CheckCircle2,
   ArrowRight,
   ArrowLeft,
-  DollarSign,
   Plus,
   Trash2,
-  ShieldCheck,
+  Shield,
+  Check,
 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { extractDeliverablesFromText, ExtractedDeliverable } from '@/lib/ai/extractor';
@@ -130,145 +127,144 @@ Fixed scope fee: $42,000 USD. Delivery timeframe: 8 weeks.
   };
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] text-zinc-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FBFBFA] text-[#18181B] flex flex-col font-sans">
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-12 flex-1 w-full space-y-8">
-        {/* Wizard Stepper */}
-        <div className="flex items-center justify-between border-b border-zinc-200 pb-5">
+      <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8 flex-1 w-full space-y-6">
+        {/* Wizard Header & Stepper */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#E5E5E0] pb-4">
           <div>
-            <h1 className="text-2xl font-extrabold text-zinc-900 tracking-tight">
-              Create New Project & Baseline Scope
+            <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono">
+              <span>Apex Digital</span>
+              <span>/</span>
+              <span className="text-zinc-700 font-sans font-semibold">New Project</span>
+            </div>
+            <h1 className="text-xl font-bold tracking-tight text-zinc-900 mt-0.5">
+              Index Agreement & Baseline Scope
             </h1>
-            <p className="text-xs text-zinc-500 mt-0.5">
-              Lock in your signed agreement to prevent unbilled revisions.
-            </p>
           </div>
 
-          <div className="flex items-center gap-2">
-            {[1, 2, 3].map((s) => (
-              <div
-                key={s}
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-                  step === s
-                    ? 'bg-indigo-600 text-white shadow-xs'
-                    : step > s
-                    ? 'bg-emerald-100 text-emerald-800'
-                    : 'bg-zinc-200 text-zinc-600'
-                }`}
-              >
-                {step > s ? '✓' : s}
-              </div>
-            ))}
+          <div className="flex items-center gap-1 font-mono text-xs">
+            <span className={`px-2 py-0.5 rounded ${step === 1 ? 'bg-zinc-900 text-white font-bold' : 'bg-zinc-100 text-zinc-500'}`}>
+              01 Details
+            </span>
+            <span className="text-zinc-300">/</span>
+            <span className={`px-2 py-0.5 rounded ${step === 2 ? 'bg-zinc-900 text-white font-bold' : 'bg-zinc-100 text-zinc-500'}`}>
+              02 SOW Text
+            </span>
+            <span className="text-zinc-300">/</span>
+            <span className={`px-2 py-0.5 rounded ${step === 3 ? 'bg-zinc-900 text-white font-bold' : 'bg-zinc-100 text-zinc-500'}`}>
+              03 Scope Checklist
+            </span>
           </div>
         </div>
 
         {error && (
-          <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-medium">
+          <div className="p-3 bg-rose-50 border border-rose-200 text-rose-800 rounded text-xs font-mono">
             {error}
           </div>
         )}
 
         {/* Step 1: Project & Client Details */}
         {step === 1 && (
-          <div className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-6">
-            <h2 className="text-base font-bold text-zinc-900 border-b border-zinc-100 pb-3">
-              Step 1: Project & Client Information
+          <div className="p-6 bg-white rounded border border-[#E5E5E0] shadow-2xs space-y-5 text-xs">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-800 border-b border-zinc-100 pb-2">
+              1.0 Project & Commercial Baseline
             </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-semibold text-zinc-700 uppercase tracking-wider mb-1">
                   Project Title
                 </label>
                 <input
                   type="text"
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                  className="w-full px-3 py-1.5 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1">
-                  Project Code / Identifier
+                <label className="block text-[11px] font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+                  Project Code / Reference
                 </label>
                 <input
                   type="text"
                   value={projectCode}
                   onChange={(e) => setProjectCode(e.target.value)}
-                  className="w-full px-3.5 py-2 text-sm border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                  className="w-full px-3 py-1.5 text-xs font-mono border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1">
-                  Fixed Fee Contract Baseline ($ USD)
+                <label className="block text-[11px] font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+                  Fixed Fee Baseline ($ USD)
                 </label>
                 <input
                   type="number"
                   value={contractValue}
                   onChange={(e) => setContractValue(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 text-sm border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                  className="w-full px-3 py-1.5 text-xs font-mono border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1">
-                  Billable Hourly Rate for Change Orders ($/hr)
+                <label className="block text-[11px] font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+                  Change Order Hourly Rate ($/hr)
                 </label>
                 <input
                   type="number"
                   value={hourlyRate}
                   onChange={(e) => setHourlyRate(Number(e.target.value))}
-                  className="w-full px-3.5 py-2 text-sm border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                  className="w-full px-3 py-1.5 text-xs font-mono border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                 />
               </div>
             </div>
 
-            <div className="pt-4 border-t border-zinc-100">
-              <h3 className="text-xs font-bold text-zinc-700 uppercase tracking-wider mb-3">
+            <div className="pt-3 border-t border-zinc-100 space-y-3">
+              <h3 className="text-[11px] font-bold text-zinc-700 uppercase tracking-wider">
                 Client Contact
               </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs text-zinc-600 mb-1">Contact Name</label>
+                  <label className="block text-[11px] text-zinc-500 mb-1">Contact Name</label>
                   <input
                     type="text"
                     value={clientName}
                     onChange={(e) => setClientName(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                    className="w-full px-2.5 py-1 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-600 mb-1">Company Name</label>
+                  <label className="block text-[11px] text-zinc-500 mb-1">Organization</label>
                   <input
                     type="text"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                    className="w-full px-2.5 py-1 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs text-zinc-600 mb-1">Contact Email</label>
+                  <label className="block text-[11px] text-zinc-500 mb-1">Email</label>
                   <input
                     type="email"
                     value={contactEmail}
                     onChange={(e) => setContactEmail(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                    className="w-full px-2.5 py-1 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-end pt-4">
+            <div className="flex justify-end pt-3 border-t border-zinc-100">
               <button
                 type="button"
                 onClick={handleProceedToStep2}
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded shadow-2xs"
               >
                 <span>Continue to SOW Upload</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
@@ -276,69 +272,56 @@ Fixed scope fee: $42,000 USD. Delivery timeframe: 8 weeks.
 
         {/* Step 2: Upload or Paste Statement of Work */}
         {step === 2 && (
-          <div className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-6">
-            <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
-              <h2 className="text-base font-bold text-zinc-900">
-                Step 2: Enter Proposal or Statement of Work (SOW)
+          <div className="p-6 bg-white rounded border border-[#E5E5E0] shadow-2xs space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-800">
+                2.0 Agreement Document & SOW Content
               </h2>
-              <span className="text-xs text-indigo-600 font-medium flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5" /> AI Scope Parser Ready
+              <span className="font-mono text-[11px] text-zinc-400">
+                Indexed for Scope Citations
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-semibold text-zinc-700 uppercase tracking-wider mb-1">
                 Document Title
               </label>
               <input
                 type="text"
                 value={sowTitle}
                 onChange={(e) => setSowTitle(e.target.value)}
-                className="w-full px-3.5 py-2 text-sm border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                className="w-full px-3 py-1.5 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
               />
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
-                  SOW Agreement Text (Include Deliverables & Explicit Exclusions)
-                </label>
-                <button
-                  type="button"
-                  onClick={() =>
-                    setSowText(
-                      `1.0 IN-SCOPE DELIVERABLES\n1.1 Custom Dashboard: Metrics, user tables, and filters.\n1.2 Stripe Subscriptions: Monthly billing integration.\n\n2.0 OUT OF SCOPE BOUNDARIES\n2.1 Mobile Apps: Native iOS and Android builds are excluded.\n2.2 Data Migration: Legacy database migration requires separate change order.`
-                    )
-                  }
-                  className="text-[11px] text-indigo-600 hover:text-indigo-800 font-medium"
-                >
-                  Load Minimal Template
-                </button>
-              </div>
+              <label className="block text-[11px] font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+                Agreement Text (Include Section 4 Boundary Exclusions)
+              </label>
               <textarea
-                rows={12}
+                rows={10}
                 value={sowText}
                 onChange={(e) => setSowText(e.target.value)}
-                className="w-full p-4 font-mono text-xs border border-zinc-200 rounded-xl focus:outline-hidden focus:border-indigo-600 bg-zinc-50/50 leading-relaxed"
+                className="w-full p-3 font-mono text-xs border border-[#E5E5E0] rounded bg-[#FBFBFA] focus:outline-hidden focus:border-[#2547D0] leading-relaxed"
               />
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-zinc-100">
+            <div className="flex items-center justify-between pt-3 border-t border-zinc-100">
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900"
+                className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-800"
               >
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleExtractScope}
-                className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded shadow-2xs"
               >
-                <Sparkles className="w-4 h-4" />
+                <Sparkles className="w-3.5 h-3.5" />
                 <span>Extract Scope Checklist</span>
               </button>
             </div>
@@ -347,35 +330,35 @@ Fixed scope fee: $42,000 USD. Delivery timeframe: 8 weeks.
 
         {/* Step 3: Scope Review & Checklist Customization */}
         {step === 3 && (
-          <div className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-6">
-            <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+          <div className="p-6 bg-white rounded border border-[#E5E5E0] shadow-2xs space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
               <div>
-                <h2 className="text-base font-bold text-zinc-900">
-                  Step 3: Review Structured Scope Baseline
+                <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-800">
+                  3.0 Review Extracted Deliverables & Boundary Exclusions
                 </h2>
-                <p className="text-xs text-zinc-500">
-                  These items form the reference checklist for AI classification and change orders.
+                <p className="text-[11px] text-zinc-500">
+                  These items serve as the baseline checklist against which new requests are classified.
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={handleAddDeliverable}
-                className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-indigo-700 bg-indigo-50 border border-indigo-200 rounded-lg hover:bg-indigo-100"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-[#2547D0] hover:text-[#1D3BB3]"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Item</span>
               </button>
             </div>
 
-            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
               {deliverables.map((item, idx) => (
                 <div
                   key={idx}
-                  className={`p-4 rounded-xl border text-xs space-y-3 transition-colors ${
+                  className={`p-3 rounded border text-xs space-y-2 ${
                     item.isExplicitlyExcluded
-                      ? 'bg-rose-50/40 border-rose-200/80'
-                      : 'bg-white border-zinc-200'
+                      ? 'bg-rose-50/30 border-rose-200/70'
+                      : 'bg-[#FBFBFA] border-[#E5E5E0]'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2">
@@ -384,11 +367,11 @@ Fixed scope fee: $42,000 USD. Delivery timeframe: 8 weeks.
                       value={item.title}
                       onChange={(e) => handleUpdateDeliverable(idx, 'title', e.target.value)}
                       placeholder="Deliverable Title"
-                      className="font-bold text-sm text-zinc-900 bg-transparent border-b border-transparent focus:border-indigo-600 focus:outline-hidden w-2/3"
+                      className="font-semibold text-zinc-900 bg-transparent border-b border-transparent focus:border-[#2547D0] focus:outline-hidden w-2/3"
                     />
 
                     <div className="flex items-center gap-2">
-                      <label className="flex items-center gap-1.5 text-xs font-semibold cursor-pointer select-none">
+                      <label className="flex items-center gap-1 text-[11px] font-semibold cursor-pointer">
                         <input
                           type="checkbox"
                           checked={item.isExplicitlyExcluded}
@@ -397,48 +380,43 @@ Fixed scope fee: $42,000 USD. Delivery timeframe: 8 weeks.
                           }
                           className="rounded text-rose-600 focus:ring-rose-500"
                         />
-                        <span className={item.isExplicitlyExcluded ? 'text-rose-700' : 'text-zinc-500'}>
-                          Explicit Out-of-Scope Exclusion
+                        <span className={item.isExplicitlyExcluded ? 'text-rose-800 font-mono' : 'text-zinc-500 font-mono'}>
+                          Out-of-Scope Boundary
                         </span>
                       </label>
 
                       <button
                         type="button"
                         onClick={() => handleRemoveDeliverable(idx)}
-                        className="text-zinc-400 hover:text-rose-600 p-1"
+                        className="text-zinc-400 hover:text-rose-600 p-0.5"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
                   </div>
 
-                  <div>
-                    <input
-                      type="text"
-                      value={item.description}
-                      onChange={(e) => handleUpdateDeliverable(idx, 'description', e.target.value)}
-                      placeholder="Description of item"
-                      className="w-full px-2.5 py-1 text-xs border border-zinc-200 rounded focus:outline-hidden bg-white"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={item.description}
+                    onChange={(e) => handleUpdateDeliverable(idx, 'description', e.target.value)}
+                    placeholder="Description and boundary notes"
+                    className="w-full px-2 py-1 text-xs border border-[#E5E5E0] rounded bg-white focus:outline-hidden"
+                  />
                 </div>
               ))}
             </div>
 
-            <div className="p-4 rounded-xl bg-zinc-50 border border-zinc-200 text-xs text-zinc-600 flex items-center gap-3">
-              <ShieldCheck className="w-5 h-5 text-indigo-600 shrink-0" />
-              <span>
-                Once locked, ScopePilot generates a <strong>secure client request portal URL</strong>. New client requests will be cited directly against this baseline.
-              </span>
+            <div className="p-3 rounded bg-zinc-50 border border-[#E5E5E0] text-[11px] text-zinc-600 font-mono">
+              * Upon creation, a dedicated client portal token will be provisioned. Client requests will cite against this baseline.
             </div>
 
-            <div className="flex items-center justify-between pt-4 border-t border-zinc-100">
+            <div className="flex items-center justify-between pt-3 border-t border-zinc-100">
               <button
                 type="button"
                 onClick={() => setStep(2)}
-                className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900"
+                className="inline-flex items-center gap-1 text-xs font-medium text-zinc-500 hover:text-zinc-800"
               >
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back</span>
               </button>
 
@@ -446,10 +424,10 @@ Fixed scope fee: $42,000 USD. Delivery timeframe: 8 weeks.
                 type="button"
                 disabled={submitting}
                 onClick={handleFinalSubmit}
-                className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs transition-colors"
+                className="inline-flex items-center gap-1.5 px-5 py-1.5 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded shadow-2xs"
               >
-                <CheckCircle2 className="w-4 h-4" />
-                <span>{submitting ? 'Creating Project...' : 'Launch Project Scope'}</span>
+                <Check className="w-3.5 h-3.5" />
+                <span>{submitting ? 'Creating Project...' : 'Launch Project Baseline'}</span>
               </button>
             </div>
           </div>

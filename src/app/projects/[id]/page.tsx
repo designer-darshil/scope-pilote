@@ -3,26 +3,22 @@
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import {
-  Compass,
   FileText,
   MessageSquare,
-  Sparkles,
-  TrendingUp,
   DollarSign,
-  ShieldCheck,
-  CheckCircle2,
-  XCircle,
-  ExternalLink,
+  TrendingUp,
+  Clock,
   Plus,
   Send,
   Printer,
   Copy,
   Check,
-  Clock,
-  AlertCircle,
-  RefreshCw,
+  RotateCcw,
   Trash2,
-  Calendar,
+  ExternalLink,
+  Shield,
+  CheckCircle2,
+  XCircle,
 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { StatusChip } from '@/components/StatusChip';
@@ -41,7 +37,7 @@ export default function ProjectCommandCenter({
   const [activeTab, setActiveTab] = useState<'requests' | 'scope' | 'changeOrders' | 'analytics' | 'timeline'>('requests');
   const [copiedPortal, setCopiedPortal] = useState(false);
 
-  // New deliverable modal/form state
+  // New deliverable state
   const [newDelivOpen, setNewDelivOpen] = useState(false);
   const [delivTitle, setDelivTitle] = useState('');
   const [delivDesc, setDelivDesc] = useState('');
@@ -79,7 +75,7 @@ export default function ProjectCommandCenter({
     const url = `${window.location.origin}/portal/${projectData.project.portal_token}`;
     navigator.clipboard.writeText(url);
     setCopiedPortal(true);
-    setTimeout(() => setCopiedPortal(false), 2000);
+    setTimeout(() => setCopiedPortal(false), 1500);
   };
 
   const handleCreateDeliverable = async (e: React.FormEvent) => {
@@ -135,7 +131,6 @@ export default function ProjectCommandCenter({
       });
       const data = await res.json();
       if (res.ok && data.request?.id) {
-        // Auto-run AI classifier
         await fetch(`/api/requests/${data.request.id}/classify`, { method: 'POST' });
       }
       setReqTitle('');
@@ -162,12 +157,12 @@ export default function ProjectCommandCenter({
 
   if (loading || !projectData) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] flex flex-col font-sans">
+      <div className="min-h-screen bg-[#FBFBFA] flex flex-col font-sans">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="flex items-center gap-2 text-zinc-500 text-sm">
-            <RefreshCw className="w-4 h-4 animate-spin text-indigo-600" />
-            <span>Loading Project Scope Command Center...</span>
+          <div className="flex items-center gap-2 text-zinc-400 font-mono text-xs">
+            <RotateCcw className="w-3.5 h-3.5 animate-spin text-[#2547D0]" />
+            <span>Loading project scope environment...</span>
           </div>
         </div>
       </div>
@@ -177,73 +172,72 @@ export default function ProjectCommandCenter({
   const { project, deliverables, requests, changeOrders, stats, documents } = projectData;
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] text-zinc-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FBFBFA] text-[#18181B] flex flex-col font-sans selection:bg-[#EFF3FE] selection:text-[#2547D0]">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 space-y-6 flex-1 w-full">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 space-y-6 flex-1 w-full">
         {/* Project Header Banner */}
-        <div className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="p-5 bg-white rounded border border-[#E5E5E0] shadow-2xs space-y-4">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
             <div className="space-y-1">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="font-mono text-xs font-bold text-zinc-500 bg-zinc-100 px-2.5 py-0.5 rounded">
+                <span className="font-mono text-xs font-bold text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded">
                   {project.code}
                 </span>
-                <span className="text-xs font-semibold px-2.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200/60">
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-100 text-zinc-700">
                   Scope Baseline v{project.active_scope_version}
                 </span>
                 <StatusChip status={project.status} />
               </div>
 
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-bold text-zinc-900 tracking-tight">
                 {project.name}
               </h1>
 
-              <p className="text-xs sm:text-sm text-zinc-500">
-                Client: <strong className="text-zinc-800">{project.client_name}</strong> · {project.company_name} ({project.contact_email}) · Base Rate: ${project.client_hourly_rate}/hr
-              </p>
+              <div className="text-xs text-zinc-500 font-mono">
+                Client: <strong className="text-zinc-800 font-sans">{project.client_name}</strong> · {project.company_name} ({project.contact_email}) · Base Rate: ${project.client_hourly_rate}/hr
+              </div>
             </div>
 
-            {/* Quick Metrics & Portal Link */}
+            {/* Metrics & Client Portal link */}
             <div className="flex flex-wrap items-center gap-3">
-              <div className="px-4 py-2 rounded-xl bg-zinc-50 border border-zinc-200 text-center">
-                <span className="text-[10px] text-zinc-400 uppercase font-semibold block">Fixed Baseline</span>
-                <span className="text-base font-bold text-zinc-900">
+              <div className="px-3 py-1.5 rounded bg-[#FBFBFA] border border-[#E5E5E0] text-right font-mono">
+                <span className="text-[10px] text-zinc-400 uppercase font-sans block">SOW Baseline</span>
+                <span className="text-sm font-bold text-zinc-900 tabular-nums">
                   ${Number(project.contract_value).toLocaleString()}
                 </span>
               </div>
 
-              <div className="px-4 py-2 rounded-xl bg-emerald-50 border border-emerald-200 text-center">
-                <span className="text-[10px] text-emerald-700 uppercase font-semibold block">Recovered Revenue</span>
-                <span className="text-base font-bold text-emerald-700">
+              <div className="px-3 py-1.5 rounded bg-emerald-50 border border-emerald-200 text-right font-mono">
+                <span className="text-[10px] text-emerald-800 uppercase font-sans block">Recovered</span>
+                <span className="text-sm font-bold text-emerald-800 tabular-nums">
                   +${Number(stats.recoveredRevenue).toLocaleString()}
                 </span>
               </div>
 
-              <div className="px-4 py-2 rounded-xl bg-amber-50 border border-amber-200 text-center">
-                <span className="text-[10px] text-amber-700 uppercase font-semibold block">Scope Drift</span>
-                <span className="text-base font-bold text-amber-800">
+              <div className="px-3 py-1.5 rounded bg-amber-50 border border-amber-200 text-right font-mono">
+                <span className="text-[10px] text-amber-800 uppercase font-sans block">Drift Rate</span>
+                <span className="text-sm font-bold text-amber-900 tabular-nums">
                   {stats.driftScore}%
                 </span>
               </div>
 
-              {/* Client Portal Quick Access button */}
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1">
                 <Link
                   href={`/portal/${project.portal_token}`}
                   target="_blank"
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-zinc-700 bg-white border border-zinc-200 hover:border-zinc-300 rounded-xl shadow-2xs hover:bg-zinc-50 transition-colors"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-zinc-700 bg-white border border-[#E5E5E0] hover:bg-zinc-50 rounded transition-colors"
                 >
-                  <span>Open Client Portal</span>
-                  <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
+                  <span>Client Portal</span>
+                  <ExternalLink className="w-3 h-3 text-zinc-400" />
                 </Link>
 
                 <button
                   onClick={copyPortalLink}
-                  className="p-2 text-zinc-600 hover:text-zinc-900 bg-white border border-zinc-200 rounded-xl hover:bg-zinc-50 shadow-2xs transition-colors"
-                  title="Copy secret client portal link"
+                  className="p-1 text-zinc-500 hover:text-zinc-800 bg-white border border-[#E5E5E0] rounded hover:bg-zinc-50 transition-colors"
+                  title="Copy client portal URL"
                 >
-                  {copiedPortal ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+                  {copiedPortal ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>
               </div>
             </div>
@@ -251,122 +245,118 @@ export default function ProjectCommandCenter({
         </div>
 
         {/* Tab Navigation */}
-        <div className="border-b border-zinc-200 flex flex-wrap gap-2 text-xs font-semibold">
+        <div className="border-b border-[#E5E5E0] flex flex-wrap gap-2 text-xs font-medium">
           <button
             onClick={() => setActiveTab('requests')}
-            className={`px-4 py-2.5 border-b-2 flex items-center gap-2 transition-colors ${
+            className={`px-3.5 py-2 border-b-2 flex items-center gap-1.5 transition-colors ${
               activeTab === 'requests'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-[#2547D0] text-[#2547D0] font-semibold'
                 : 'border-transparent text-zinc-500 hover:text-zinc-800'
             }`}
           >
-            <MessageSquare className="w-4 h-4" />
-            <span>Intake Requests & AI Comparisons ({requests.length})</span>
+            <MessageSquare className="w-3.5 h-3.5" />
+            <span>Requests & Scope Comparison ({requests.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('scope')}
-            className={`px-4 py-2.5 border-b-2 flex items-center gap-2 transition-colors ${
+            className={`px-3.5 py-2 border-b-2 flex items-center gap-1.5 transition-colors ${
               activeTab === 'scope'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-[#2547D0] text-[#2547D0] font-semibold'
                 : 'border-transparent text-zinc-500 hover:text-zinc-800'
             }`}
           >
-            <FileText className="w-4 h-4" />
-            <span>Agreed SOW & Deliverables ({deliverables.length})</span>
+            <FileText className="w-3.5 h-3.5" />
+            <span>Contract SOW & Deliverables ({deliverables.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('changeOrders')}
-            className={`px-4 py-2.5 border-b-2 flex items-center gap-2 transition-colors ${
+            className={`px-3.5 py-2 border-b-2 flex items-center gap-1.5 transition-colors ${
               activeTab === 'changeOrders'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-[#2547D0] text-[#2547D0] font-semibold'
                 : 'border-transparent text-zinc-500 hover:text-zinc-800'
             }`}
           >
-            <DollarSign className="w-4 h-4" />
-            <span>Change Orders & Approvals ({changeOrders.length})</span>
+            <DollarSign className="w-3.5 h-3.5" />
+            <span>Change Orders & Sign-offs ({changeOrders.length})</span>
           </button>
 
           <button
             onClick={() => setActiveTab('analytics')}
-            className={`px-4 py-2.5 border-b-2 flex items-center gap-2 transition-colors ${
+            className={`px-3.5 py-2 border-b-2 flex items-center gap-1.5 transition-colors ${
               activeTab === 'analytics'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-[#2547D0] text-[#2547D0] font-semibold'
                 : 'border-transparent text-zinc-500 hover:text-zinc-800'
             }`}
           >
-            <TrendingUp className="w-4 h-4" />
+            <TrendingUp className="w-3.5 h-3.5" />
             <span>Scope Drift Analytics</span>
           </button>
 
           <button
             onClick={() => setActiveTab('timeline')}
-            className={`px-4 py-2.5 border-b-2 flex items-center gap-2 transition-colors ${
+            className={`px-3.5 py-2 border-b-2 flex items-center gap-1.5 transition-colors ${
               activeTab === 'timeline'
-                ? 'border-indigo-600 text-indigo-600'
+                ? 'border-[#2547D0] text-[#2547D0] font-semibold'
                 : 'border-transparent text-zinc-500 hover:text-zinc-800'
             }`}
           >
-            <Clock className="w-4 h-4" />
+            <Clock className="w-3.5 h-3.5" />
             <span>Audit History</span>
           </button>
         </div>
 
         {/* TAB 1: Intake Requests & Side-by-Side Comparison */}
         {activeTab === 'requests' && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-base font-bold text-zinc-900">
+                <h2 className="text-sm font-bold text-zinc-900">
                   Client Requests & Scope Decision Engine
                 </h2>
                 <p className="text-xs text-zinc-500">
-                  Incoming requests from the client portal are cited against the active agreement.
+                  Incoming requests are cited against the active agreement baseline.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setNewRequestOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-zinc-700 bg-white border border-zinc-200 hover:border-zinc-300 rounded-lg shadow-2xs transition-colors"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Log Request (Email / Slack)</span>
-                </button>
-              </div>
+              <button
+                onClick={() => setNewRequestOpen(true)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-zinc-700 bg-white border border-[#E5E5E0] hover:bg-zinc-50 rounded transition-colors self-start sm:self-auto"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Log Request (Email / Slack)</span>
+              </button>
             </div>
 
             {/* Manual request logger dialog */}
             {newRequestOpen && (
-              <form onSubmit={handleManualCreateRequest} className="p-5 bg-white rounded-2xl border border-zinc-200 shadow-sm space-y-4 animate-in fade-in duration-150">
+              <form onSubmit={handleManualCreateRequest} className="p-4 bg-white rounded border border-[#E5E5E0] shadow-sm space-y-3 animate-in fade-in duration-150 text-xs">
                 <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800">
-                    Log Informal Client Request (Slack / Email)
-                  </h3>
-                  <button type="button" onClick={() => setNewRequestOpen(false)} className="text-zinc-400 hover:text-zinc-600 text-xs">
+                  <h3 className="font-bold text-zinc-900">Log Client Request Manually</h3>
+                  <button type="button" onClick={() => setNewRequestOpen(false)} className="text-zinc-400 hover:text-zinc-600">
                     Cancel
                   </button>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-medium text-zinc-700 mb-1">Request Title</label>
+                    <label className="block text-[11px] font-medium text-zinc-700 mb-1">Request Title</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. Export transaction logs to CSV"
                       value={reqTitle}
                       onChange={(e) => setReqTitle(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                      className="w-full px-2.5 py-1 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-zinc-700 mb-1">Urgency</label>
+                    <label className="block text-[11px] font-medium text-zinc-700 mb-1">Urgency</label>
                     <select
                       value={reqUrgency}
                       onChange={(e: any) => setReqUrgency(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:outline-hidden bg-white"
+                      className="w-full px-2 py-1 text-xs border border-[#E5E5E0] rounded focus:outline-hidden bg-white"
                     >
                       <option value="low">Low</option>
                       <option value="medium">Medium</option>
@@ -377,31 +367,30 @@ export default function ProjectCommandCenter({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 mb-1">Client&apos;s Message or Description</label>
+                  <label className="block text-[11px] font-medium text-zinc-700 mb-1">Raw Client Message</label>
                   <textarea
                     rows={3}
                     required
-                    placeholder="Paste the raw message from the client..."
+                    placeholder="Paste the verbatim client request..."
                     value={reqMessage}
                     onChange={(e) => setReqMessage(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                    className="w-full p-2 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                   />
                 </div>
 
                 <div className="flex justify-end gap-2">
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-xs transition-colors"
+                    className="inline-flex items-center gap-1 px-3 py-1 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded shadow-2xs"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
-                    <span>Save & Run AI Scope Classifier</span>
+                    <span>Save & Run AI Classifier</span>
                   </button>
                 </div>
               </form>
             )}
 
             {/* List of side-by-side requests */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               {requests.map((request: any) => (
                 <SideBySideComparison
                   key={request.id}
@@ -418,20 +407,20 @@ export default function ProjectCommandCenter({
 
         {/* TAB 2: Scope & Deliverables Checklist */}
         {activeTab === 'scope' && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-base font-bold text-zinc-900">
+                <h2 className="text-sm font-bold text-zinc-900">
                   Agreed Deliverables Checklist (Baseline Scope v{project.active_scope_version})
                 </h2>
                 <p className="text-xs text-zinc-500">
-                  Clear boundaries prevent disputes. Mark items that are explicitly excluded.
+                  Explicit boundaries and core deliverables preventing unbilled revisions.
                 </p>
               </div>
 
               <button
                 onClick={() => setNewDelivOpen(true)}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-xs transition-colors self-start sm:self-auto"
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded shadow-2xs self-start sm:self-auto"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Add Deliverable / Exclusion</span>
@@ -440,34 +429,32 @@ export default function ProjectCommandCenter({
 
             {/* Add Deliverable Form */}
             {newDelivOpen && (
-              <form onSubmit={handleCreateDeliverable} className="p-5 bg-white rounded-2xl border border-zinc-200 shadow-sm space-y-4 animate-in fade-in duration-150">
+              <form onSubmit={handleCreateDeliverable} className="p-4 bg-white rounded border border-[#E5E5E0] shadow-sm space-y-3 animate-in fade-in duration-150 text-xs">
                 <div className="flex items-center justify-between border-b border-zinc-100 pb-2">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-800">
-                    Add Scope Deliverable or Boundary
-                  </h3>
-                  <button type="button" onClick={() => setNewDelivOpen(false)} className="text-zinc-400 hover:text-zinc-600 text-xs">
+                  <h3 className="font-bold text-zinc-900">Add Scope Item</h3>
+                  <button type="button" onClick={() => setNewDelivOpen(false)} className="text-zinc-400 hover:text-zinc-600">
                     Cancel
                   </button>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <div className="sm:col-span-2">
-                    <label className="block text-xs font-medium text-zinc-700 mb-1">Deliverable Title</label>
+                    <label className="block text-[11px] font-medium text-zinc-700 mb-1">Title</label>
                     <input
                       type="text"
                       required
                       placeholder="e.g. Automated PDF Receipt Generation"
                       value={delivTitle}
                       onChange={(e) => setDelivTitle(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                      className="w-full px-2.5 py-1 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-zinc-700 mb-1">Category</label>
+                    <label className="block text-[11px] font-medium text-zinc-700 mb-1">Category</label>
                     <select
                       value={delivCategory}
                       onChange={(e) => setDelivCategory(e.target.value)}
-                      className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:outline-hidden bg-white"
+                      className="w-full px-2 py-1 text-xs border border-[#E5E5E0] rounded focus:outline-hidden bg-white"
                     >
                       <option value="Core Feature">Core Feature</option>
                       <option value="Design/UI">Design/UI</option>
@@ -478,18 +465,18 @@ export default function ProjectCommandCenter({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 mb-1">Description & Acceptance Criteria</label>
+                  <label className="block text-[11px] font-medium text-zinc-700 mb-1">Description & Acceptance Boundary</label>
                   <textarea
                     rows={2}
                     placeholder="Details about what is included or excluded..."
                     value={delivDesc}
                     onChange={(e) => setDelivDesc(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg focus:outline-hidden focus:border-indigo-600"
+                    className="w-full p-2 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <label className="flex items-center gap-2 text-xs font-semibold text-rose-700 cursor-pointer">
+                <div className="flex items-center justify-between pt-1">
+                  <label className="flex items-center gap-1.5 text-xs text-rose-800 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={delivExcluded}
@@ -501,7 +488,7 @@ export default function ProjectCommandCenter({
 
                   <button
                     type="submit"
-                    className="px-4 py-2 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-xs"
+                    className="px-3 py-1 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded"
                   >
                     Save Deliverable
                   </button>
@@ -510,103 +497,94 @@ export default function ProjectCommandCenter({
             )}
 
             {/* Checklist items */}
-            <div className="bg-white rounded-2xl border border-zinc-200 shadow-2xs overflow-hidden">
+            <div className="bg-white rounded border border-[#E5E5E0] overflow-hidden shadow-2xs">
               <div className="divide-y divide-zinc-200">
                 {deliverables.map((deliv: any) => (
                   <div
                     key={deliv.id}
-                    className={`p-4 flex items-start justify-between gap-4 transition-colors ${
-                      deliv.is_explicitly_excluded ? 'bg-rose-50/30' : 'hover:bg-zinc-50/50'
+                    className={`p-3.5 flex items-start justify-between gap-3 text-xs ${
+                      deliv.is_explicitly_excluded ? 'bg-rose-50/20' : 'hover:bg-zinc-50/50'
                     }`}
                   >
-                    <div className="space-y-1">
+                    <div className="space-y-0.5">
                       <div className="flex items-center gap-2">
                         {deliv.is_explicitly_excluded ? (
-                          <XCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                          <XCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
                         ) : (
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                         )}
-                        <span className="text-sm font-bold text-zinc-900">{deliv.title}</span>
+                        <span className="font-semibold text-zinc-900">{deliv.title}</span>
                         <span
-                          className={`text-[10px] px-2 py-0.5 rounded font-semibold uppercase tracking-wider ${
+                          className={`text-[10px] px-1.5 py-0.2 rounded font-mono font-medium uppercase tracking-wider ${
                             deliv.is_explicitly_excluded
-                              ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                              ? 'bg-rose-100 text-rose-800'
                               : 'bg-zinc-100 text-zinc-600'
                           }`}
                         >
-                          {deliv.is_explicitly_excluded ? 'Explicit Exclusion' : deliv.category}
+                          {deliv.is_explicitly_excluded ? 'Exclusion Boundary' : deliv.category}
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-600 pl-6">{deliv.description}</p>
+                      <p className="text-zinc-600 pl-5 leading-relaxed">{deliv.description}</p>
                       {deliv.acceptance_criteria && (
-                        <p className="text-[11px] text-zinc-400 pl-6 italic">
-                          Acceptance: {deliv.acceptance_criteria}
+                        <p className="text-[11px] text-zinc-400 pl-5 italic font-serif">
+                          Acceptance Criteria: {deliv.acceptance_criteria}
                         </p>
                       )}
                     </div>
 
                     <button
                       onClick={() => handleDeleteDeliverable(deliv.id)}
-                      className="p-1.5 text-zinc-400 hover:text-rose-600 rounded-md hover:bg-zinc-100"
+                      className="p-1 text-zinc-400 hover:text-rose-600 rounded"
                       title="Remove deliverable"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-3 h-3" />
                     </button>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Uploaded Documents List */}
-            <div className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-3">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700">
-                Saved Agreement Documents
-              </h3>
-              <div className="space-y-2">
-                {documents.map((doc: any) => (
-                  <div
-                    key={doc.id}
-                    className="p-3.5 rounded-xl border border-zinc-200 bg-zinc-50/50 flex items-center justify-between text-xs"
-                  >
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-4 h-4 text-indigo-600" />
-                      <div>
-                        <span className="font-semibold text-zinc-900">{doc.title}</span>
-                        <span className="text-zinc-400 ml-2">Version {doc.version} · {doc.document_type}</span>
-                      </div>
-                    </div>
-                    <span className="text-zinc-500 font-mono text-[11px]">
-                      {doc.extracted_text.length} chars indexed for AI citation
-                    </span>
+            {/* Documents index */}
+            <div className="p-4 bg-white rounded border border-[#E5E5E0] space-y-2 text-xs">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-400 block">
+                Source Agreement Document
+              </span>
+              {documents.map((doc: any) => (
+                <div key={doc.id} className="p-2.5 rounded bg-[#FBFBFA] border border-[#E5E5E0] flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5 text-zinc-500" />
+                    <span className="font-medium text-zinc-900">{doc.title}</span>
+                    <span className="text-zinc-400 font-mono text-[11px]">Version {doc.version}</span>
                   </div>
-                ))}
-              </div>
+                  <span className="text-zinc-400 font-mono text-[11px]">
+                    Indexed for AI citation
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
         )}
 
         {/* TAB 3: Change Orders & Approvals */}
         {activeTab === 'changeOrders' && (
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
-                <h2 className="text-base font-bold text-zinc-900">
-                  Formal Change Orders & Approvals
+                <h2 className="text-sm font-bold text-zinc-900">
+                  Executed & Pending Change Orders
                 </h2>
                 <p className="text-xs text-zinc-500">
-                  Turn out-of-scope work into billable addendums with digital signatures.
+                  Formal contract amendments with itemized fees and digital signatures.
                 </p>
               </div>
 
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setManualCoOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-xs transition-colors"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Draft Change Order</span>
-                </button>
-              </div>
+              <button
+                onClick={() => setManualCoOpen(true)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded shadow-2xs transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Draft Change Order</span>
+              </button>
             </div>
 
             <div className="space-y-4">
@@ -616,46 +594,46 @@ export default function ProjectCommandCenter({
                 return (
                   <div
                     key={co.id}
-                    className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-4"
+                    className="p-5 bg-white rounded border border-[#E5E5E0] shadow-2xs space-y-3 text-xs"
                   >
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-100 pb-3">
-                      <div className="flex items-center gap-3">
-                        <span className="font-mono text-xs font-bold text-zinc-600 bg-zinc-100 px-2.5 py-0.5 rounded">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-100 pb-2.5">
+                      <div className="flex items-center gap-2.5">
+                        <span className="font-mono text-xs font-bold text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded">
                           {co.order_number}
                         </span>
-                        <h3 className="text-base font-bold text-zinc-900">{co.title}</h3>
+                        <h3 className="text-sm font-bold text-zinc-900">{co.title}</h3>
                         <StatusChip status={co.status} />
                       </div>
 
-                      <div className="flex items-center gap-3 text-xs">
-                        <span className="text-zinc-400">Total:</span>
-                        <span className="text-lg font-extrabold text-zinc-900">
+                      <div className="flex items-center gap-3 font-mono text-xs">
+                        <span className="text-zinc-400 font-sans">Total:</span>
+                        <span className="text-sm font-bold text-zinc-900 tabular-nums">
                           ${Number(co.total_amount).toLocaleString()} {co.currency}
                         </span>
                         <span className="text-zinc-400">·</span>
-                        <span className="font-semibold text-zinc-700">+{co.schedule_delay_days} days</span>
+                        <span className="text-zinc-700">+{co.schedule_delay_days} days</span>
                       </div>
                     </div>
 
                     <p className="text-xs text-zinc-600 leading-relaxed">{co.description}</p>
 
-                    {/* Line items breakdown */}
-                    <div className="border border-zinc-200 rounded-xl overflow-hidden text-xs">
-                      <table className="w-full text-left">
-                        <thead className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 text-[11px]">
+                    {/* Table of line items */}
+                    <div className="border border-[#E5E5E0] rounded overflow-hidden">
+                      <table className="w-full text-left text-xs">
+                        <thead className="bg-[#FBFBFA] border-b border-[#E5E5E0] text-zinc-500 font-semibold text-[11px]">
                           <tr>
                             <th className="py-2 px-3">Description</th>
-                            <th className="py-2 px-2">Hours</th>
-                            <th className="py-2 px-2">Rate</th>
-                            <th className="py-2 px-3 text-right">Amount</th>
+                            <th className="py-2 px-2 w-16">Hours</th>
+                            <th className="py-2 px-2 w-20">Rate</th>
+                            <th className="py-2 px-3 text-right w-24">Amount</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-zinc-200 bg-white">
+                        <tbody className="divide-y divide-zinc-200 bg-white font-mono text-xs">
                           {(co.line_items || []).map((item: any, i: number) => (
                             <tr key={i}>
-                              <td className="py-2 px-3 text-zinc-800">{item.description}</td>
+                              <td className="py-2 px-3 font-sans text-zinc-800">{item.description}</td>
                               <td className="py-2 px-2 text-zinc-600">{item.hours}h</td>
-                              <td className="py-2 px-2 text-zinc-600">${item.rate}/h</td>
+                              <td className="py-2 px-2 text-zinc-600">${item.rate}/hr</td>
                               <td className="py-2 px-3 text-right font-medium text-zinc-900">
                                 ${(item.amount || item.hours * item.rate).toLocaleString()}
                               </td>
@@ -665,19 +643,15 @@ export default function ProjectCommandCenter({
                       </table>
                     </div>
 
-                    {/* Approval or Action Footer */}
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+                    {/* Actions bar */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-zinc-100">
                       {co.approval ? (
-                        <div className="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                          <span>
-                            Digitally Signed by <strong>{co.approval.approver_name}</strong> on{' '}
-                            {new Date(co.approval.decided_at).toLocaleString()}
-                          </span>
+                        <div className="text-[11px] text-emerald-800 font-mono">
+                          Signed by <strong>{co.approval.approver_name}</strong> on {new Date(co.approval.decided_at).toLocaleDateString()}
                         </div>
                       ) : (
-                        <div className="text-xs text-zinc-500">
-                          Status: <strong className="text-zinc-700 capitalize">{co.status.replace(/_/g, ' ')}</strong>
+                        <div className="text-[11px] text-zinc-500 font-mono">
+                          Status: {co.status.toUpperCase()}
                         </div>
                       )}
 
@@ -685,29 +659,21 @@ export default function ProjectCommandCenter({
                         {co.status === 'draft' && (
                           <button
                             onClick={() => handleSendChangeOrder(co.id)}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-2xs transition-colors"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded shadow-2xs"
                           >
-                            <Send className="w-3.5 h-3.5" />
-                            <span>Send to Client for Sign-off</span>
+                            <Send className="w-3 h-3" />
+                            <span>Send to Client</span>
                           </button>
                         )}
 
                         <Link
                           href={approvalUrl}
                           target="_blank"
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-zinc-700 bg-white border border-zinc-200 hover:bg-zinc-50 rounded-lg transition-colors"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-zinc-700 bg-white border border-[#E5E5E0] hover:bg-zinc-50 rounded"
                         >
-                          <span>Client Sign-off Page</span>
-                          <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
+                          <span>Sign-off View</span>
+                          <ExternalLink className="w-3 h-3 text-zinc-400" />
                         </Link>
-
-                        <button
-                          onClick={() => window.print()}
-                          className="p-1.5 text-zinc-500 hover:text-zinc-800 rounded-lg border border-zinc-200 hover:bg-zinc-50"
-                          title="Print / Export to PDF"
-                        >
-                          <Printer className="w-4 h-4" />
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -727,56 +693,44 @@ export default function ProjectCommandCenter({
 
         {/* TAB 4: Scope Drift Analytics */}
         {activeTab === 'analytics' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="p-5 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-1">
-                <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                  Scope Drift Score
-                </span>
-                <div className="text-3xl font-extrabold text-zinc-900">{stats.driftScore}%</div>
-                <p className="text-xs text-zinc-500">
-                  {stats.outOfScopeRequests} of {stats.totalRequests} client requests were out of scope
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 font-mono text-xs">
+              <div className="p-4 bg-white rounded border border-[#E5E5E0] space-y-1">
+                <span className="text-[10px] font-sans font-semibold text-zinc-400 uppercase">Drift Index</span>
+                <div className="text-2xl font-bold text-zinc-900 tabular-nums">{stats.driftScore}%</div>
+                <p className="text-[11px] font-sans text-zinc-500">
+                  {stats.outOfScopeRequests} of {stats.totalRequests} intake requests exceeded baseline
                 </p>
               </div>
 
-              <div className="p-5 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-1">
-                <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                  Recovered Revenue
-                </span>
-                <div className="text-3xl font-extrabold text-emerald-600">
-                  +${stats.recoveredRevenue.toLocaleString()}
-                </div>
-                <p className="text-xs text-zinc-500">
+              <div className="p-4 bg-white rounded border border-[#E5E5E0] space-y-1">
+                <span className="text-[10px] font-sans font-semibold text-zinc-400 uppercase">Recovered Revenue</span>
+                <div className="text-2xl font-bold text-emerald-700 tabular-nums">+${stats.recoveredRevenue.toLocaleString()}</div>
+                <p className="text-[11px] font-sans text-zinc-500">
                   From {stats.approvedChangeOrders} approved change orders
                 </p>
               </div>
 
-              <div className="p-5 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-1">
-                <span className="text-xs font-semibold text-zinc-400 uppercase tracking-wider">
-                  Schedule Extension
-                </span>
-                <div className="text-3xl font-extrabold text-zinc-900">
-                  +{stats.totalScheduleDelayDays} Days
-                </div>
-                <p className="text-xs text-zinc-500">
-                  Officially agreed buffer added to completion date
+              <div className="p-4 bg-white rounded border border-[#E5E5E0] space-y-1">
+                <span className="text-[10px] font-sans font-semibold text-zinc-400 uppercase">Schedule Extension</span>
+                <div className="text-2xl font-bold text-zinc-900 tabular-nums">+{stats.totalScheduleDelayDays} Days</div>
+                <p className="text-[11px] font-sans text-zinc-500">
+                  Milestone buffer added to project delivery
                 </p>
               </div>
             </div>
 
-            <div className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-4">
-              <h3 className="text-sm font-bold text-zinc-900">
-                Scope Defense Protection Breakdown
-              </h3>
-              <div className="space-y-3 text-xs">
+            <div className="p-5 bg-white rounded border border-[#E5E5E0] space-y-3 text-xs">
+              <h3 className="font-bold text-zinc-900 text-xs">Request Disposition Breakdown</h3>
+              <div className="space-y-3 font-mono">
                 <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="font-medium text-zinc-700">Out of Scope Requests (Flagged & Quoted)</span>
-                    <span className="font-bold text-zinc-900">{stats.outOfScopeRequests}</span>
+                  <div className="flex justify-between mb-1 font-sans text-xs">
+                    <span>Out-of-Scope (Converted to Change Order)</span>
+                    <span className="font-mono font-bold">{stats.outOfScopeRequests}</span>
                   </div>
-                  <div className="w-full bg-zinc-100 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-zinc-100 h-1.5 rounded-full overflow-hidden">
                     <div
-                      className="bg-amber-500 h-full rounded-full"
+                      className="bg-amber-600 h-full rounded-full"
                       style={{
                         width: `${stats.totalRequests ? (stats.outOfScopeRequests / stats.totalRequests) * 100 : 0}%`,
                       }}
@@ -785,30 +739,15 @@ export default function ProjectCommandCenter({
                 </div>
 
                 <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="font-medium text-zinc-700">In Scope Requests (Covered without surcharge)</span>
-                    <span className="font-bold text-zinc-900">{stats.inScopeRequests}</span>
+                  <div className="flex justify-between mb-1 font-sans text-xs">
+                    <span>In-Scope (Covered without revision)</span>
+                    <span className="font-mono font-bold">{stats.inScopeRequests}</span>
                   </div>
-                  <div className="w-full bg-zinc-100 h-2 rounded-full overflow-hidden">
+                  <div className="w-full bg-zinc-100 h-1.5 rounded-full overflow-hidden">
                     <div
-                      className="bg-emerald-500 h-full rounded-full"
+                      className="bg-emerald-600 h-full rounded-full"
                       style={{
                         width: `${stats.totalRequests ? (stats.inScopeRequests / stats.totalRequests) * 100 : 0}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <div className="flex justify-between mb-1">
-                    <span className="font-medium text-zinc-700">Pending Review / Ambiguous</span>
-                    <span className="font-bold text-zinc-900">{stats.needsReviewRequests}</span>
-                  </div>
-                  <div className="w-full bg-zinc-100 h-2 rounded-full overflow-hidden">
-                    <div
-                      className="bg-indigo-500 h-full rounded-full"
-                      style={{
-                        width: `${stats.totalRequests ? (stats.needsReviewRequests / stats.totalRequests) * 100 : 0}%`,
                       }}
                     />
                   </div>
@@ -820,54 +759,30 @@ export default function ProjectCommandCenter({
 
         {/* TAB 5: Timeline & Audit History */}
         {activeTab === 'timeline' && (
-          <div className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-6">
-            <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
-              <div>
-                <h2 className="text-base font-bold text-zinc-900">
-                  Immutable Project Event History
-                </h2>
-                <p className="text-xs text-zinc-500">
-                  Chronological audit trail of all scope modifications, SOW uploads, classifications, and approvals.
-                </p>
-              </div>
-              <ShieldCheck className="w-5 h-5 text-indigo-600" />
+          <div className="p-5 bg-white rounded border border-[#E5E5E0] space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-[#E5E5E0] pb-2.5">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-zinc-900">
+                Immutable Project Event History
+              </h2>
+              <span className="text-[11px] font-mono text-zinc-400">Cryptographic audit log</span>
             </div>
 
-            <div className="relative pl-6 border-l-2 border-indigo-100 space-y-6">
+            <div className="relative pl-5 border-l border-zinc-200 space-y-4">
               {requests.map((r: any) => (
-                <div key={r.id} className="relative space-y-1">
-                  <div className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-indigo-600 border-2 border-white" />
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="font-semibold text-zinc-800">Client Request #{r.request_number} Submitted</span>
-                    <span className="text-zinc-400">·</span>
-                    <span className="text-zinc-400">{new Date(r.created_at).toLocaleString()}</span>
+                <div key={r.id} className="relative space-y-0.5">
+                  <div className="absolute -left-[25px] top-1.5 w-2 h-2 rounded-full bg-[#2547D0]" />
+                  <div className="flex items-center gap-2 text-xs font-mono text-zinc-500">
+                    <span className="font-semibold text-zinc-800 font-sans">Client Request #{r.request_number} Logged</span>
+                    <span>·</span>
+                    <span>{new Date(r.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                   </div>
-                  <p className="text-xs text-zinc-600">
-                    &quot;{r.title}&quot; by {r.submitted_by_name}
+                  <p className="text-xs text-zinc-700">
+                    &ldquo;{r.title}&rdquo; by {r.submitted_by_name}
                   </p>
                   {r.classification && (
-                    <div className="text-[11px] text-indigo-600 font-medium">
-                      Classified as <strong className="uppercase">{r.classification.outcome.replace('_', ' ')}</strong> (Confidence: {(r.classification.confidence_score * 100).toFixed(0)}%)
+                    <div className="text-[11px] font-mono text-zinc-500">
+                      Outcome: <strong className="uppercase text-zinc-800">{r.classification.outcome.replace('_', ' ')}</strong> ({(r.classification.confidence_score * 100).toFixed(0)}% confidence)
                     </div>
-                  )}
-                </div>
-              ))}
-
-              {changeOrders.map((co: any) => (
-                <div key={co.id} className="relative space-y-1">
-                  <div className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white" />
-                  <div className="flex items-center gap-2 text-xs">
-                    <span className="font-semibold text-zinc-800">Change Order {co.order_number} ({co.status.toUpperCase()})</span>
-                    <span className="text-zinc-400">·</span>
-                    <span className="text-zinc-400">{new Date(co.created_at).toLocaleString()}</span>
-                  </div>
-                  <p className="text-xs text-zinc-600">
-                    Amount: ${Number(co.total_amount).toLocaleString()} USD · Delay: +{co.schedule_delay_days} days
-                  </p>
-                  {co.approval && (
-                    <p className="text-[11px] text-emerald-700 font-semibold">
-                      Approved by {co.approval.approver_name} on {new Date(co.approval.decided_at).toLocaleString()}
-                    </p>
                   )}
                 </div>
               ))}

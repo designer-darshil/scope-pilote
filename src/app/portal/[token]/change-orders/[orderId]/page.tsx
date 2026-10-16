@@ -3,17 +3,12 @@
 import React, { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import {
-  ShieldCheck,
   CheckCircle2,
   XCircle,
-  Calendar,
-  DollarSign,
-  Clock,
   Printer,
-  FileCheck2,
-  Lock,
   ArrowLeft,
   AlertTriangle,
+  Lock,
 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { StatusChip } from '@/components/StatusChip';
@@ -132,10 +127,10 @@ export default function ClientChangeOrderApprovalPage({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] flex flex-col font-sans">
+      <div className="min-h-screen bg-[#FBFBFA] flex flex-col font-sans">
         <Navbar />
         <div className="flex-1 flex items-center justify-center">
-          <div className="text-zinc-500 text-sm">Loading change order document...</div>
+          <div className="text-zinc-400 font-mono text-xs">Authenticating change order session...</div>
         </div>
       </div>
     );
@@ -143,14 +138,14 @@ export default function ClientChangeOrderApprovalPage({
 
   if (error || !changeOrder) {
     return (
-      <div className="min-h-screen bg-[#FAFAF8] flex flex-col font-sans">
+      <div className="min-h-screen bg-[#FBFBFA] flex flex-col font-sans">
         <Navbar />
         <div className="flex-1 flex items-center justify-center p-4">
-          <div className="p-8 bg-white rounded-2xl border border-zinc-200 shadow-sm max-w-md text-center space-y-3">
-            <AlertTriangle className="w-8 h-8 text-rose-600 mx-auto" />
-            <h2 className="text-lg font-bold text-zinc-900">Change Order Not Found</h2>
-            <p className="text-xs text-zinc-600">
-              This change order link may have expired or was updated by your agency.
+          <div className="p-8 bg-white rounded border border-[#E5E5E0] max-w-md text-center space-y-3">
+            <AlertTriangle className="w-6 h-6 text-rose-600 mx-auto" />
+            <h2 className="text-base font-bold text-zinc-900">Change Order Not Found</h2>
+            <p className="text-xs text-zinc-500">
+              This change order link may have expired or was modified by the issuing agency.
             </p>
           </div>
         </div>
@@ -162,101 +157,102 @@ export default function ClientChangeOrderApprovalPage({
   const isRejected = changeOrder.status === 'rejected';
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] text-zinc-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FBFBFA] text-[#18181B] flex flex-col font-sans selection:bg-[#EFF3FE] selection:text-[#2547D0]">
       <Navbar />
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-8 flex-1 w-full">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-6 flex-1 w-full">
         {/* Navigation back to client intake portal */}
         <div className="flex items-center justify-between no-print">
           <Link
             href={`/portal/${token}`}
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-600 hover:text-zinc-900"
           >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Client Intake Portal</span>
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Return to Project Portal</span>
           </Link>
 
           <button
             onClick={() => window.print()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-zinc-700 bg-white border border-zinc-200 hover:bg-zinc-50 rounded-lg shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium text-zinc-700 bg-white border border-[#E5E5E0] hover:bg-zinc-50 rounded shadow-2xs"
           >
-            <Printer className="w-4 h-4 text-zinc-500" />
-            <span>Print or Save PDF</span>
+            <Printer className="w-3.5 h-3.5 text-zinc-400" />
+            <span>Print or Export PDF</span>
           </button>
         </div>
 
         {/* Change Order Document Card */}
-        <div className="p-8 sm:p-10 bg-white rounded-2xl border border-zinc-200 shadow-sm space-y-8 print-page">
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 pb-6">
-            <div>
+        <div className="p-8 bg-white rounded border border-[#E5E5E0] shadow-sm space-y-6 print-page">
+          {/* Document Header */}
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 border-b border-[#E5E5E0] pb-6">
+            <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <span className="font-mono text-xs font-bold text-indigo-700 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded">
+                <span className="font-mono text-xs font-bold text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded">
                   {changeOrder.order_number}
                 </span>
-                <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">
-                  Scope Change Addendum
+                <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">
+                  Master SOW Addendum
                 </span>
               </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-zinc-900 tracking-tight mt-1">
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-zinc-900">
                 {changeOrder.title}
               </h1>
-              <p className="text-xs text-zinc-500 mt-1">
-                Project: <strong>{changeOrder.project_name}</strong> ({changeOrder.project_code})
-              </p>
+              <div className="text-xs text-zinc-500 font-mono space-y-0.5 pt-1">
+                <div>Project: <strong className="text-zinc-800 font-sans">{changeOrder.project_name}</strong> ({changeOrder.project_code})</div>
+                <div>Issued by: <strong className="text-zinc-800 font-sans">{changeOrder.agency_name}</strong> · Recipient: <strong className="text-zinc-800 font-sans">{changeOrder.company_name}</strong></div>
+              </div>
             </div>
 
-            <div className="text-right self-start sm:self-auto">
+            <div className="text-right self-start sm:self-auto space-y-1">
               <StatusChip status={changeOrder.status} size="md" />
-              <span className="text-[11px] text-zinc-400 block mt-1.5">
-                Issued by {changeOrder.agency_name}
-              </span>
+              <div className="text-[11px] text-zinc-400 font-mono">
+                Issued {new Date(changeOrder.created_at).toLocaleDateString()}
+              </div>
             </div>
           </div>
 
           {/* Description / Scope Summary */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700">
-              Scope Extension Summary
+          <div className="space-y-1.5">
+            <h3 className="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+              1.0 Scope Specification & Adjustments
             </h3>
-            <p className="text-sm text-zinc-700 leading-relaxed bg-zinc-50/70 p-4 rounded-xl border border-zinc-100">
+            <div className="text-xs text-zinc-800 leading-relaxed bg-[#FBFBFA] p-4 rounded border border-[#E5E5E0] whitespace-pre-wrap font-sans">
               {changeOrder.description}
-            </p>
+            </div>
           </div>
 
           {/* Billable Line Items Table */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-700">
-              Scope Line Items & Fee Breakdown
+          <div className="space-y-1.5">
+            <h3 className="text-[11px] font-mono font-bold uppercase tracking-wider text-zinc-400">
+              2.0 Deliverable Fee Breakdown
             </h3>
-            <div className="border border-zinc-200 rounded-xl overflow-hidden">
+            <div className="border border-[#E5E5E0] rounded overflow-hidden">
               <table className="w-full text-left text-xs">
-                <thead className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 font-semibold">
+                <thead className="bg-[#FBFBFA] border-b border-[#E5E5E0] text-zinc-500 font-semibold text-[11px]">
                   <tr>
-                    <th className="py-3 px-4">Item Description</th>
-                    <th className="py-3 px-3 w-20">Hours</th>
-                    <th className="py-3 px-3 w-24">Hourly Rate</th>
-                    <th className="py-3 px-4 w-32 text-right">Total</th>
+                    <th className="py-2.5 px-3">Item Description</th>
+                    <th className="py-2.5 px-2 w-16">Hours</th>
+                    <th className="py-2.5 px-2 w-20">Hourly Rate</th>
+                    <th className="py-2.5 px-3 w-28 text-right">Total</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-200 bg-white">
+                <tbody className="divide-y divide-zinc-200 bg-white font-mono text-xs">
                   {(changeOrder.line_items || []).map((item: any, i: number) => (
                     <tr key={i}>
-                      <td className="py-3 px-4 font-medium text-zinc-900">{item.description}</td>
-                      <td className="py-3 px-3 text-zinc-600">{item.hours}h</td>
-                      <td className="py-3 px-3 text-zinc-600">${item.rate}/hr</td>
-                      <td className="py-3 px-4 text-right font-bold text-zinc-900">
+                      <td className="py-2.5 px-3 font-sans text-zinc-900 font-medium">{item.description}</td>
+                      <td className="py-2.5 px-2 text-zinc-600">{item.hours}h</td>
+                      <td className="py-2.5 px-2 text-zinc-600">${item.rate}/hr</td>
+                      <td className="py-2.5 px-3 text-right font-semibold text-zinc-900">
                         ${(item.amount || item.hours * item.rate).toLocaleString()}
                       </td>
                     </tr>
                   ))}
                 </tbody>
-                <tfoot className="bg-zinc-50 border-t border-zinc-200 font-bold text-zinc-900">
+                <tfoot className="bg-[#FBFBFA] border-t border-[#E5E5E0] font-bold text-zinc-900">
                   <tr>
-                    <td colSpan={3} className="py-3 px-4 text-right uppercase tracking-wider text-[11px] text-zinc-500">
-                      Total Added Investment:
+                    <td colSpan={3} className="py-2.5 px-3 text-right uppercase tracking-wider text-[11px] font-sans text-zinc-500">
+                      Total Added Scope Investment:
                     </td>
-                    <td className="py-3 px-4 text-right text-base text-indigo-700">
+                    <td className="py-2.5 px-3 text-right text-sm font-mono text-[#2547D0]">
                       ${Number(changeOrder.total_amount).toLocaleString()} {changeOrder.currency}
                     </td>
                   </tr>
@@ -266,124 +262,119 @@ export default function ClientChangeOrderApprovalPage({
           </div>
 
           {/* Schedule Impact Card */}
-          <div className="p-4 rounded-xl bg-indigo-50/60 border border-indigo-200/80 flex items-center justify-between text-xs">
-            <div className="flex items-center gap-3">
-              <Clock className="w-5 h-5 text-indigo-600" />
-              <div>
-                <span className="font-bold text-indigo-900 block">
-                  Delivery Timeline Impact: +{changeOrder.schedule_delay_days} Business Days
-                </span>
-                <span className="text-zinc-600">
-                  Agreed milestone completion dates are adjusted accordingly upon sign-off.
-                </span>
-              </div>
+          <div className="p-3.5 rounded bg-[#FBFBFA] border border-[#E5E5E0] flex items-center justify-between text-xs">
+            <div>
+              <span className="font-bold text-zinc-900 block font-mono text-xs">
+                3.0 Schedule Adjustment: +{changeOrder.schedule_delay_days} Business Days
+              </span>
+              <span className="text-zinc-500 text-[11px]">
+                Upon digital sign-off, targeted milestone deadlines under the agreement are updated accordingly.
+              </span>
             </div>
-            <span className="font-semibold text-indigo-800 bg-white px-3 py-1 rounded-md border border-indigo-200 shrink-0">
-              Timeline Adjusted
+            <span className="font-mono text-xs font-semibold text-zinc-700 bg-white px-2 py-1 rounded border border-[#E5E5E0] shrink-0">
+              +{changeOrder.schedule_delay_days} Days
             </span>
           </div>
 
-          {/* Legal Advisory Disclaimer */}
-          <p className="text-[11px] text-zinc-400 italic leading-relaxed border-t border-zinc-100 pt-4">
-            * This document represents an amendment to the existing master services agreement between {changeOrder.agency_name} and {changeOrder.company_name}. Digital signature data is captured alongside IP address and cryptographic timestamps.
-          </p>
+          {/* Legal Disclaimer */}
+          <div className="text-[11px] text-zinc-400 font-mono leading-relaxed border-t border-zinc-100 pt-3">
+            * This document amends the active Statement of Work between {changeOrder.agency_name} and {changeOrder.company_name}. Digital confirmation records IP address, user agent, and an immutable cryptographic audit event.
+          </div>
 
-          {/* If already approved, show digital certificate stamp */}
+          {/* Approved state digital certificate */}
           {isApproved && (
-            <div className="p-6 rounded-2xl bg-emerald-50 border border-emerald-300 space-y-3">
-              <div className="flex items-center gap-2 text-emerald-800 font-bold text-base">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                <span>Digitally Approved & Authenticated</span>
+            <div className="p-5 rounded bg-emerald-50 border border-emerald-300 space-y-2">
+              <div className="flex items-center gap-1.5 text-emerald-900 font-bold text-sm">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                <span>Digitally Executed & Bound</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-emerald-900 pt-2 border-t border-emerald-200">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs text-emerald-950 pt-2 border-t border-emerald-200 font-mono text-[11px]">
                 <div>
-                  <span className="text-emerald-700 text-[10px] block font-medium uppercase">Authorized Signer</span>
-                  <strong className="text-sm">{changeOrder.approval?.approver_name || changeOrder.client_name}</strong>
+                  <span className="text-emerald-700 text-[10px] block font-sans uppercase">Authorized Signer</span>
+                  <strong>{changeOrder.approval?.approver_name || changeOrder.client_name}</strong>
                 </div>
                 <div>
-                  <span className="text-emerald-700 text-[10px] block font-medium uppercase">Timestamp</span>
+                  <span className="text-emerald-700 text-[10px] block font-sans uppercase">Timestamp</span>
                   <strong>{new Date(changeOrder.approval?.decided_at || changeOrder.updated_at).toLocaleString()}</strong>
                 </div>
                 <div>
-                  <span className="text-emerald-700 text-[10px] block font-medium uppercase">Digital Signature Hash</span>
-                  <span className="font-mono text-[10px] bg-white/70 px-2 py-0.5 rounded border border-emerald-300">
-                    SHA256: {Math.random().toString(36).slice(2, 10).toUpperCase()}
-                  </span>
+                  <span className="text-emerald-700 text-[10px] block font-sans uppercase">Auth Method</span>
+                  <span>Token Portal Session</span>
                 </div>
               </div>
             </div>
           )}
 
-          {/* If rejected, show rejection notice */}
+          {/* Rejected state */}
           {isRejected && (
-            <div className="p-6 rounded-2xl bg-rose-50 border border-rose-300 space-y-2">
-              <div className="flex items-center gap-2 text-rose-800 font-bold text-base">
-                <XCircle className="w-5 h-5 text-rose-600" />
+            <div className="p-4 rounded bg-rose-50 border border-rose-300 text-xs space-y-1">
+              <div className="flex items-center gap-1.5 text-rose-900 font-bold">
+                <XCircle className="w-4 h-4 text-rose-600" />
                 <span>Change Order Declined</span>
               </div>
-              <p className="text-xs text-rose-700">
+              <p className="text-rose-700">
                 Reason: {changeOrder.approval?.rejection_reason || 'Declined by client.'}
               </p>
             </div>
           )}
 
-          {/* Sign-off Form (if still pending) */}
+          {/* Client Digital Sign-Off Form */}
           {!isApproved && !isRejected && (
-            <form onSubmit={handleApprove} className="p-6 rounded-2xl bg-zinc-50 border border-zinc-200 space-y-5 no-print">
+            <form onSubmit={handleApprove} className="p-5 rounded bg-[#FBFBFA] border border-[#E5E5E0] space-y-4 no-print text-xs">
               <div>
-                <h3 className="text-sm font-bold text-zinc-900">
-                  Client Authorization & Digital Sign-off
+                <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-900">
+                  4.0 Authorization & Digital Sign-off
                 </h3>
-                <p className="text-xs text-zinc-500 mt-0.5">
-                  Confirm your details below to approve this scope adjustment.
+                <p className="text-zinc-500 mt-0.5">
+                  Confirm your details below to execute this scope change order.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-700 mb-1">Your Full Name</label>
+                  <label className="block text-[11px] font-semibold text-zinc-700 mb-1">Your Full Name</label>
                   <input
                     type="text"
                     required
                     value={approverName}
                     onChange={(e) => setApproverName(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg bg-white focus:outline-hidden focus:border-indigo-600"
+                    className="w-full px-2.5 py-1.5 text-xs border border-[#E5E5E0] rounded bg-white focus:outline-hidden focus:border-[#2547D0]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-700 mb-1">Title / Role</label>
+                  <label className="block text-[11px] font-semibold text-zinc-700 mb-1">Title / Role</label>
                   <input
                     type="text"
                     required
                     value={approverTitle}
                     onChange={(e) => setApproverTitle(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg bg-white focus:outline-hidden focus:border-indigo-600"
+                    className="w-full px-2.5 py-1.5 text-xs border border-[#E5E5E0] rounded bg-white focus:outline-hidden focus:border-[#2547D0]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-zinc-700 mb-1">Email Confirmation</label>
+                  <label className="block text-[11px] font-semibold text-zinc-700 mb-1">Email Confirmation</label>
                   <input
                     type="email"
                     required
                     value={approverEmail}
                     onChange={(e) => setApproverEmail(e.target.value)}
-                    className="w-full px-3 py-1.5 text-xs border border-zinc-200 rounded-lg bg-white focus:outline-hidden focus:border-indigo-600"
+                    className="w-full px-2.5 py-1.5 text-xs border border-[#E5E5E0] rounded bg-white focus:outline-hidden focus:border-[#2547D0]"
                   />
                 </div>
               </div>
 
-              <label className="flex items-start gap-2.5 text-xs text-zinc-700 cursor-pointer pt-2">
+              <label className="flex items-start gap-2 text-xs text-zinc-700 cursor-pointer pt-1">
                 <input
                   type="checkbox"
                   required
                   checked={agreeTerms}
                   onChange={(e) => setAgreeTerms(e.target.checked)}
-                  className="rounded text-indigo-600 focus:ring-indigo-500 mt-0.5"
+                  className="rounded text-[#2547D0] focus:ring-[#2547D0] mt-0.5"
                 />
                 <span className="leading-relaxed">
-                  I confirm that I am an authorized representative of <strong>{changeOrder.company_name}</strong> and agree to the additional scope, investment amount of <strong>${Number(changeOrder.total_amount).toLocaleString()} {changeOrder.currency}</strong>, and schedule impact specified above.
+                  I confirm that I am an authorized representative of <strong>{changeOrder.company_name}</strong> and agree to the additional scope, fee of <strong>${Number(changeOrder.total_amount).toLocaleString()} {changeOrder.currency}</strong>, and timeline adjustment.
                 </span>
               </label>
 
@@ -399,10 +390,10 @@ export default function ClientChangeOrderApprovalPage({
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-xs transition-colors"
+                  className="inline-flex items-center justify-center gap-1.5 px-5 py-2 text-xs font-bold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded shadow-2xs transition-colors"
                 >
-                  <CheckCircle2 className="w-4 h-4" />
-                  <span>{submitting ? 'Authenticating...' : 'Approve & Sign Change Order'}</span>
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span>{submitting ? 'Authenticating...' : 'Authorize & Sign Change Order'}</span>
                 </button>
               </div>
             </form>
@@ -411,24 +402,24 @@ export default function ClientChangeOrderApprovalPage({
 
         {/* Decline Modal */}
         {showDeclineModal && (
-          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl max-w-md w-full p-6 border border-zinc-200 shadow-2xl space-y-4">
-              <h3 className="text-base font-bold text-zinc-900">Decline Change Order</h3>
-              <p className="text-xs text-zinc-600">
-                Please provide feedback for the agency team regarding why this change order cannot be approved as drafted:
+          <div className="fixed inset-0 z-50 bg-black/35 flex items-center justify-center p-4">
+            <div className="bg-white rounded border border-[#E5E5E0] max-w-md w-full p-5 shadow-lg space-y-3 text-xs">
+              <h3 className="text-sm font-bold text-zinc-900">Decline Change Order</h3>
+              <p className="text-zinc-600">
+                Provide feedback to the agency regarding why this change order cannot be approved:
               </p>
               <textarea
                 rows={3}
-                placeholder="e.g. Price is too high, or we would prefer to defer this until Phase 2..."
+                placeholder="State the reason or required adjustment..."
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
-                className="w-full p-3 text-xs border border-zinc-200 rounded-xl focus:outline-hidden focus:border-indigo-600"
+                className="w-full p-2.5 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0]"
               />
-              <div className="flex justify-end gap-2">
+              <div className="flex justify-end gap-2 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowDeclineModal(false)}
-                  className="px-3 py-1.5 text-xs text-zinc-600 hover:text-zinc-900"
+                  className="px-3 py-1.5 text-xs text-zinc-500 hover:text-zinc-800"
                 >
                   Cancel
                 </button>
@@ -436,9 +427,9 @@ export default function ClientChangeOrderApprovalPage({
                   type="button"
                   onClick={handleReject}
                   disabled={submitting}
-                  className="px-4 py-1.5 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-lg shadow-xs"
+                  className="px-3 py-1.5 text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded"
                 >
-                  Submit Decline
+                  Confirm Decline
                 </button>
               </div>
             </div>

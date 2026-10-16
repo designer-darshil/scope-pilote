@@ -3,219 +3,256 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import {
-  Compass,
-  Sparkles,
-  ShieldCheck,
-  TrendingUp,
-  FileCheck2,
   ArrowRight,
-  CheckCircle2,
-  AlertTriangle,
-  FileText,
-  DollarSign,
+  Check,
   ChevronRight,
-  Lock,
 } from 'lucide-react';
 import { Navbar } from '@/components/Navbar';
 import { StatusChip } from '@/components/StatusChip';
 
 export default function LandingPage() {
-  const [demoInput, setDemoInput] = useState(
-    'Can we add wholesale B2B pricing with Net-30 invoice terms for distributors before launch?'
-  );
-  const [demoResult, setDemoResult] = useState<{
-    outcome: string;
-    confidence: number;
-    citation: string;
-    suggestedPrice: number;
-    delayDays: number;
-  } | null>({
-    outcome: 'out_of_scope',
-    confidence: 0.98,
-    citation: 'SOW Section 4.2: "Wholesale B2B pricing, net-30 terms, and tiered bulk distributor rates are strictly excluded from Phase 1."',
-    suggestedPrice: 4500,
-    delayDays: 8,
-  });
-
-  const testSamples = [
-    {
-      label: 'Wholesale B2B Pricing',
-      text: 'Can we add wholesale B2B pricing with Net-30 invoice terms for distributors before launch?',
-      outcome: 'out_of_scope',
-      confidence: 0.98,
-      citation: 'SOW Section 4.2: "Wholesale B2B pricing, net-30 terms, and tiered bulk distributor rates are strictly excluded."',
-      suggestedPrice: 4500,
-      delayDays: 8,
-    },
-    {
-      label: 'Typo-Tolerant Search',
-      text: 'When testing product search, searching "addidas" with two d\'s should still match Adidas products.',
-      outcome: 'in_scope',
-      confidence: 0.95,
-      citation: 'SOW Section 2.1: "Responsive catalog with faceted category filtering, keyword search, brand tags."',
-      suggestedPrice: 0,
-      delayDays: 0,
-    },
-    {
-      label: 'Crypto Payments via BitPay',
-      text: 'We want to accept Bitcoin and Ethereum at checkout before the holiday rush.',
-      outcome: 'out_of_scope',
-      confidence: 0.97,
-      citation: 'SOW Section 4.1: "Cryptocurrency, BitPay, or secondary gateways are excluded."',
-      suggestedPrice: 5100,
-      delayDays: 10,
-    },
-  ];
-
-  const handleSelectSample = (sample: typeof testSamples[0]) => {
-    setDemoInput(sample.text);
-    setDemoResult({
-      outcome: sample.outcome,
-      confidence: sample.confidence,
-      citation: sample.citation,
-      suggestedPrice: sample.suggestedPrice,
-      delayDays: sample.delayDays,
-    });
-  };
+  const [activePreviewTab, setActivePreviewTab] = useState<'comparison' | 'changeOrder'>('comparison');
 
   return (
-    <div className="min-h-screen bg-[#FAFAF8] text-zinc-900 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FBFBFA] text-[#18181B] flex flex-col font-sans selection:bg-[#EFF3FE] selection:text-[#2547D0]">
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-16 md:pt-28 md:pb-24 overflow-hidden border-b border-zinc-200/80">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-zinc-200 rounded-full shadow-2xs text-xs font-semibold text-indigo-700">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-600" />
-            <span>Scope Defense & Revenue Recovery for Agencies & Freelancers</span>
-          </div>
+      <section className="pt-16 pb-12 sm:pt-20 sm:pb-16 border-b border-[#E5E5E0]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 mb-4 text-[11px] font-mono uppercase tracking-wider text-zinc-500">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#2547D0]" />
+              <span>Scope Verification & Revenue Defense</span>
+            </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-zinc-900 leading-[1.12]">
-            Turn informal client requests into{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">
-              approved change orders.
-            </span>
-          </h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-[#18181B] leading-[1.12]">
+              A contract-backed system to prevent unpaid scope changes.
+            </h1>
 
-          <p className="max-w-2xl mx-auto text-lg sm:text-xl text-zinc-600 font-normal leading-relaxed">
-            Stop absorbing free scope creep. ScopePilot compares new client messages against your original agreement, provides instant cited evidence, and generates digital change orders in seconds.
-          </p>
-
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link
-              href="/dashboard"
-              className="w-full sm:w-auto px-6 py-3.5 text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2"
-            >
-              <span>Explore Live Dashboard Demo</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-
-            <Link
-              href="/projects/prj_meridian_store"
-              className="w-full sm:w-auto px-6 py-3.5 text-sm font-semibold text-zinc-700 bg-white hover:bg-zinc-50 border border-zinc-200 rounded-xl shadow-2xs transition-colors flex items-center justify-center gap-2"
-            >
-              <span>View Meridian Retail Case Study</span>
-            </Link>
-          </div>
-
-          {/* Trust badges */}
-          <div className="pt-6 flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-500 font-medium">
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Versioned Scope SOW
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Cited Source Excerpts
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Immutable Event Audit Trail
-            </span>
-            <span className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Legally Disclaimed Advisory
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Interactive Hero Widget: Live Scope Classifier Demo */}
-      <section className="py-16 px-4 sm:px-6 bg-white border-b border-zinc-200/80">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-8">
-            <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
-              Interactive Preview
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 mt-1">
-              Experience the AI Scope Classifier
-            </h2>
-            <p className="text-sm text-zinc-500 mt-2">
-              Select a sample client request to see how ScopePilot cites agreement clauses and proposes billable change orders:
+            <p className="mt-4 text-base sm:text-lg text-zinc-600 leading-relaxed font-normal max-w-2xl">
+              ScopePilot indexes your agreed Statement of Work, compares incoming client requests against committed deliverables with cited evidence, and generates client-ready change orders in seconds.
             </p>
 
-            <div className="mt-4 flex flex-wrap justify-center gap-2">
-              {testSamples.map((sample) => (
-                <button
-                  key={sample.label}
-                  onClick={() => handleSelectSample(sample)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
-                    demoInput === sample.text
-                      ? 'bg-indigo-50 border-indigo-300 text-indigo-700'
-                      : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
-                  }`}
-                >
-                  {sample.label}
-                </button>
-              ))}
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Link
+                href="/dashboard"
+                className="px-4 py-2 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded transition-colors shadow-2xs flex items-center gap-1.5"
+              >
+                <span>Open Workspace Demo</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+
+              <Link
+                href="/projects/prj_meridian_store"
+                className="px-4 py-2 text-xs font-medium text-zinc-700 bg-white hover:bg-zinc-50 border border-[#E5E5E0] rounded transition-colors"
+              >
+                Inspect Meridian Retail Project
+              </Link>
+
+              <span className="text-xs text-zinc-400 font-mono ml-1 hidden sm:inline">
+                No sign-up required for trial
+              </span>
             </div>
           </div>
 
-          {/* Interactive Card */}
-          <div className="p-6 rounded-2xl border border-zinc-200 bg-[#FAFAF8] shadow-sm space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-zinc-600 uppercase tracking-wider mb-2">
-                Incoming Client Request
-              </label>
-              <div className="p-3.5 bg-white border border-zinc-200 rounded-xl text-sm text-zinc-800 shadow-2xs font-mono">
-                &quot;{demoInput}&quot;
+          {/* Large, Believable Product Interface Preview */}
+          <div className="mt-12 rounded-lg border border-[#E5E5E0] bg-white shadow-sm overflow-hidden">
+            {/* Window chrome */}
+            <div className="px-4 py-2.5 bg-[#FBFBFA] border-b border-[#E5E5E0] flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 inline-block" />
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 inline-block" />
+                <span className="w-2.5 h-2.5 rounded-full bg-zinc-300 inline-block" />
+                <span className="text-zinc-400 font-mono text-[11px] ml-2">
+                  ScopePilot / Meridian E-Commerce Storefront / REQ #103
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setActivePreviewTab('comparison')}
+                  className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+                    activePreviewTab === 'comparison'
+                      ? 'bg-zinc-200/80 text-zinc-900'
+                      : 'text-zinc-500 hover:text-zinc-800'
+                  }`}
+                >
+                  Scope Comparison
+                </button>
+                <button
+                  onClick={() => setActivePreviewTab('changeOrder')}
+                  className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+                    activePreviewTab === 'changeOrder'
+                      ? 'bg-zinc-200/80 text-zinc-900'
+                      : 'text-zinc-500 hover:text-zinc-800'
+                  }`}
+                >
+                  Change Order Document
+                </button>
               </div>
             </div>
 
-            {demoResult && (
-              <div className="p-5 bg-white rounded-xl border border-zinc-200/80 shadow-2xs space-y-4 animate-in fade-in duration-200">
-                <div className="flex flex-wrap items-center justify-between gap-3">
+            {/* Preview Body */}
+            {activePreviewTab === 'comparison' ? (
+              <div className="p-6 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-zinc-100">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold text-zinc-600">Scope Determination:</span>
-                    <StatusChip status={demoResult.outcome} />
+                    <span className="font-mono text-xs font-semibold px-2 py-0.5 bg-zinc-100 rounded text-zinc-700">
+                      REQ #103
+                    </span>
+                    <span className="text-sm font-semibold text-zinc-900">
+                      Wholesale B2B Pricing Tier & Company Invoicing
+                    </span>
+                    <StatusChip status="out_of_scope" />
                   </div>
-                  <span className="text-xs font-bold text-indigo-600">
-                    Confidence: {(demoResult.confidence * 100).toFixed(0)}%
-                  </span>
+                  <div className="text-xs text-zinc-500 font-mono">
+                    Client: <strong className="text-zinc-700 font-sans">Sarah Chen (Meridian Retail)</strong> · Urgency: HIGH
+                  </div>
                 </div>
 
-                <div className="p-3 bg-indigo-50/50 border border-indigo-100 rounded-lg text-xs text-zinc-800">
-                  <span className="font-semibold text-indigo-900 block mb-1">
-                    Cited Evidence from Agreement:
-                  </span>
-                  <p className="italic font-serif text-zinc-700">{demoResult.citation}</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Left: Original Scope Baseline */}
+                  <div className="p-4 rounded border border-[#E5E5E0] bg-[#FBFBFA] space-y-3">
+                    <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+                      <span>Contract Baseline Evidence</span>
+                      <span className="font-mono text-zinc-400">SOW v1.0 Signed</span>
+                    </div>
+
+                    <div className="p-3 rounded border border-amber-200/80 bg-amber-50/50 space-y-1 text-xs">
+                      <div className="text-amber-900 font-semibold text-[11px] flex items-center justify-between">
+                        <span>Cited: Section 4.2 — Explicit Exclusions</span>
+                        <span className="text-[10px] uppercase font-bold text-amber-800 bg-amber-100 px-1 py-0.2 rounded">
+                          Negative Boundary
+                        </span>
+                      </div>
+                      <blockquote className="italic font-serif text-zinc-800 text-xs border-l-2 border-amber-400 pl-2 py-0.5">
+                        &ldquo;Wholesale B2B pricing, net-30 terms, and tiered bulk distributor rates are strictly excluded from Phase 1 scope.&rdquo;
+                      </blockquote>
+                    </div>
+
+                    <div className="text-[11px] text-zinc-500 space-y-1 pt-1">
+                      <div className="font-medium text-zinc-700">Matched Agreed Deliverable:</div>
+                      <div className="p-2 rounded border border-zinc-200 bg-white text-zinc-700 text-xs">
+                        <strong># del_05_ex:</strong> Wholesale B2B Pricing Tiers & Net-30 Terms [Explicit Exclusion Boundary]
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: New Client Request */}
+                  <div className="p-4 rounded border border-[#E5E5E0] bg-white space-y-3">
+                    <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wider text-zinc-500">
+                      <span>Client Submission</span>
+                      <span className="font-mono text-zinc-400">Via Request Portal</span>
+                    </div>
+
+                    <div className="p-3 rounded border border-zinc-200 bg-[#FBFBFA] text-xs text-zinc-800 font-sans leading-relaxed">
+                      &ldquo;Hey Alex, our executive board decided we need wholesale distributors to purchase bulk units with net-30 terms before holiday launch. Can we get this added?&rdquo;
+                    </div>
+
+                    {/* Classification result */}
+                    <div className="p-3 rounded border border-zinc-200 bg-zinc-50 text-xs space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-zinc-600 font-medium">Advisory Classification:</span>
+                        <span className="font-mono font-semibold text-zinc-900">98% Confidence</span>
+                      </div>
+                      <p className="text-zinc-600 text-[11px] leading-relaxed">
+                        The request directly triggers the explicit scope boundary exclusion in Section 4.2. Work requires an authorized Change Order.
+                      </p>
+                      <div className="grid grid-cols-3 gap-2 pt-1 border-t border-zinc-200 text-center font-mono text-xs">
+                        <div>
+                          <span className="text-[10px] text-zinc-400 block font-sans">EST. HOURS</span>
+                          <span className="font-bold text-zinc-900">30 hrs</span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] text-zinc-400 block font-sans">BILLABLE</span>
+                          <span className="font-bold text-[#2547D0]">$4,500.00</span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] text-zinc-400 block font-sans">DELIVERY</span>
+                          <span className="font-bold text-zinc-900">+8 days</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-center">
-                  <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-200">
-                    <span className="block text-[10px] text-zinc-400 font-medium uppercase">Outcome</span>
-                    <span className="text-xs font-bold text-zinc-800 uppercase">
-                      {demoResult.outcome.replace('_', ' ')}
+                <div className="flex items-center justify-between pt-2 border-t border-zinc-100 text-xs text-zinc-500">
+                  <span className="text-[11px]">
+                    Advisory analysis. Final commercial terms require human authorization.
+                  </span>
+                  <div className="flex gap-2">
+                    <span className="px-2.5 py-1 text-xs font-semibold text-white bg-[#2547D0] rounded">
+                      Convert to Change Order
                     </span>
                   </div>
-                  <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-200">
-                    <span className="block text-[10px] text-zinc-400 font-medium uppercase">Revenue Recovered</span>
-                    <span className="text-sm font-bold text-emerald-600">
-                      ${demoResult.suggestedPrice.toLocaleString()} USD
+                </div>
+              </div>
+            ) : (
+              <div className="p-6 space-y-4">
+                <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+                  <div>
+                    <span className="font-mono text-xs font-bold text-zinc-700 bg-zinc-100 px-2 py-0.5 rounded">
+                      CO-2026-001
+                    </span>
+                    <h3 className="text-sm font-bold text-zinc-900 mt-1">
+                      B2B Wholesale Pricing & Net-30 Terms Extension
+                    </h3>
+                  </div>
+                  <StatusChip status="approved" />
+                </div>
+
+                <div className="border border-zinc-200 rounded text-xs overflow-hidden">
+                  <table className="w-full text-left">
+                    <thead className="bg-[#FBFBFA] border-b border-zinc-200 text-zinc-500 text-[11px] font-semibold">
+                      <tr>
+                        <th className="py-2 px-3">Description</th>
+                        <th className="py-2 px-2 w-16">Hours</th>
+                        <th className="py-2 px-2 w-20">Rate</th>
+                        <th className="py-2 px-3 w-24 text-right">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-200 bg-white font-mono text-xs">
+                      <tr>
+                        <td className="py-2 px-3 font-sans text-zinc-800">
+                          B2B customer tax-exemption verification & tiered price rules
+                        </td>
+                        <td className="py-2 px-2 text-zinc-600">16h</td>
+                        <td className="py-2 px-2 text-zinc-600">$150/h</td>
+                        <td className="py-2 px-3 text-right font-medium text-zinc-900">$2,400.00</td>
+                      </tr>
+                      <tr>
+                        <td className="py-2 px-3 font-sans text-zinc-800">
+                          Net-30 invoice order routing and PDF invoice generation
+                        </td>
+                        <td className="py-2 px-2 text-zinc-600">14h</td>
+                        <td className="py-2 px-2 text-zinc-600">$150/h</td>
+                        <td className="py-2 px-3 text-right font-medium text-zinc-900">$2,100.00</td>
+                      </tr>
+                    </tbody>
+                    <tfoot className="bg-[#FBFBFA] border-t border-zinc-200 font-bold text-zinc-900">
+                      <tr>
+                        <td colSpan={3} className="py-2 px-3 text-right font-sans text-[11px] text-zinc-500 uppercase">
+                          Total Additional Fee:
+                        </td>
+                        <td className="py-2 px-3 text-right font-mono text-xs text-[#2547D0]">
+                          $4,500.00 USD
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+
+                <div className="p-3 rounded bg-emerald-50 border border-emerald-200 text-xs text-emerald-900 flex items-center justify-between">
+                  <div>
+                    <span className="font-semibold block">Digitally Executed by Sarah Chen (VP Digital Products)</span>
+                    <span className="text-[11px] text-emerald-700 font-mono">
+                      Timestamp: Oct 14, 2026 · Auth IP: 198.51.100.42
                     </span>
                   </div>
-                  <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-200 col-span-2 sm:col-span-1">
-                    <span className="block text-[10px] text-zinc-400 font-medium uppercase">Schedule Impact</span>
-                    <span className="text-sm font-bold text-zinc-800">
-                      +{demoResult.delayDays} business days
-                    </span>
-                  </div>
+                  <span className="font-mono text-[11px] font-semibold text-emerald-800">
+                    +8 Days Schedule Extension
+                  </span>
                 </div>
               </div>
             )}
@@ -223,59 +260,177 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* The 3-Step Scope Protocol */}
-      <section className="py-20 px-4 sm:px-6 max-w-6xl mx-auto space-y-12">
-        <div className="text-center space-y-2">
-          <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
-            Engineered For Frictionless Client Approvals
-          </span>
-          <h2 className="text-3xl font-extrabold text-zinc-900">
-            How ScopePilot Protects Your Profitability
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
-              1
-            </div>
-            <h3 className="text-base font-bold text-zinc-900">Upload SOW & Extract Checklist</h3>
-            <p className="text-xs text-zinc-600 leading-relaxed">
-              Upload your signed statement of work or proposal. ScopePilot extracts clear deliverables, acceptance criteria, and explicit boundary exclusions.
-            </p>
+      {/* The 3 Workflow Chapters */}
+      <section className="py-16 sm:py-20 border-b border-[#E5E5E0] bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-12">
+          <div className="max-w-2xl">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 block">
+              Workflow Architecture
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-zinc-900 mt-1">
+              How ScopePilot stops scope creep without awkward client negotiations
+            </h2>
           </div>
 
-          <div className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
-              2
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-5 rounded border border-[#E5E5E0] bg-[#FBFBFA] space-y-2.5">
+              <span className="text-xs font-mono font-bold text-zinc-400">01</span>
+              <h3 className="text-sm font-semibold text-zinc-900">
+                Index Contract & Deliverables
+              </h3>
+              <p className="text-xs text-zinc-600 leading-relaxed">
+                Upload your signed proposal or Statement of Work. ScopePilot extracts structured deliverables and explicitly defines out-of-scope boundaries to establish a versioned baseline.
+              </p>
             </div>
-            <h3 className="text-base font-bold text-zinc-900">Intake & Cited AI Classification</h3>
-            <p className="text-xs text-zinc-600 leading-relaxed">
-              Clients submit requests through a branded, token-secured portal. The classifier compares the request against the baseline and cites exact agreement clauses.
-            </p>
-          </div>
 
-          <div className="p-6 bg-white rounded-2xl border border-zinc-200 shadow-2xs space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 font-bold">
-              3
+            <div className="p-5 rounded border border-[#E5E5E0] bg-[#FBFBFA] space-y-2.5">
+              <span className="text-xs font-mono font-bold text-zinc-400">02</span>
+              <h3 className="text-sm font-semibold text-zinc-900">
+                Cross-Reference Requests with Cited Evidence
+              </h3>
+              <p className="text-xs text-zinc-600 leading-relaxed">
+                When a client asks for new work via email or the intake portal, the advisory classifier compares it against the baseline and quotes the exact agreement section as evidence.
+              </p>
             </div>
-            <h3 className="text-base font-bold text-zinc-900">1-Click Change Orders & Digital Sign-off</h3>
-            <p className="text-xs text-zinc-600 leading-relaxed">
-              Convert out-of-scope requests into a clean change order with editable hours, rates, and schedule adjustments. Clients review and approve digitally in seconds.
-            </p>
+
+            <div className="p-5 rounded border border-[#E5E5E0] bg-[#FBFBFA] space-y-2.5">
+              <span className="text-xs font-mono font-bold text-zinc-400">03</span>
+              <h3 className="text-sm font-semibold text-zinc-900">
+                Generate & Execute Change Orders
+              </h3>
+              <p className="text-xs text-zinc-600 leading-relaxed">
+                Convert out-of-scope items into formal change orders with billable rates and revised delivery dates. Clients review and digitally approve via dedicated access links.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="mt-auto border-t border-zinc-200 bg-white py-12 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
-          <div className="flex items-center gap-2 font-medium text-zinc-800">
-            <Compass className="w-4 h-4 text-indigo-600" />
-            <span>ScopePilot SaaS — Freelance & Agency Scope Defense System</span>
+      {/* Pricing Overview */}
+      <section className="py-16 border-b border-[#E5E5E0] bg-[#FBFBFA]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 space-y-8">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-500 block">
+                Subscription Plans
+              </span>
+              <h2 className="text-2xl font-semibold tracking-tight text-zinc-900 mt-1">
+                Straightforward, Transparent Pricing
+              </h2>
+            </div>
+            <Link
+              href="/pricing"
+              className="text-xs font-semibold text-[#2547D0] hover:text-[#1D3BB3] flex items-center gap-1"
+            >
+              <span>View Full Plan Comparison</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <div>
-            Built with Next.js App Router, Supabase PostgreSQL, and Server-Side LLM Intelligence.
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="p-6 rounded border border-[#E5E5E0] bg-white space-y-4">
+              <div>
+                <h3 className="text-sm font-bold text-zinc-900">Starter</h3>
+                <p className="text-xs text-zinc-500 mt-0.5">For solo freelancers and consultants.</p>
+                <div className="mt-3 text-2xl font-bold font-mono text-zinc-900">
+                  $29 <span className="text-xs text-zinc-400 font-sans font-normal">/ month</span>
+                </div>
+              </div>
+              <ul className="text-xs text-zinc-600 space-y-2 pt-2 border-t border-zinc-100">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-400" /> 3 Active Projects</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-400" /> 25 Scope Classifications/mo</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-400" /> SOW Deliverable Extraction</li>
+              </ul>
+            </div>
+
+            <div className="p-6 rounded border-2 border-[#2547D0] bg-white space-y-4 relative">
+              <span className="absolute top-3 right-3 text-[10px] font-mono font-bold uppercase text-[#2547D0] bg-[#EFF3FE] px-2 py-0.5 rounded">
+                Recommended
+              </span>
+              <div>
+                <h3 className="text-sm font-bold text-zinc-900">Growth</h3>
+                <p className="text-xs text-zinc-500 mt-0.5">For small studios & development teams.</p>
+                <div className="mt-3 text-2xl font-bold font-mono text-zinc-900">
+                  $79 <span className="text-xs text-zinc-400 font-sans font-normal">/ month</span>
+                </div>
+              </div>
+              <ul className="text-xs text-zinc-600 space-y-2 pt-2 border-t border-zinc-100">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2547D0]" /> Unlimited Active Projects</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2547D0]" /> 200 Scope Classifications/mo</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2547D0]" /> Tokenized Client Request Portals</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-[#2547D0]" /> Digital Sign-off & Audit Ledger</li>
+              </ul>
+            </div>
+
+            <div className="p-6 rounded border border-[#E5E5E0] bg-white space-y-4">
+              <div>
+                <h3 className="text-sm font-bold text-zinc-900">Agency</h3>
+                <p className="text-xs text-zinc-500 mt-0.5">For agencies managing high client volume.</p>
+                <div className="mt-3 text-2xl font-bold font-mono text-zinc-900">
+                  $199 <span className="text-xs text-zinc-400 font-sans font-normal">/ month</span>
+                </div>
+              </div>
+              <ul className="text-xs text-zinc-600 space-y-2 pt-2 border-t border-zinc-100">
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-400" /> Unlimited Projects & Clients</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-400" /> 1,000 Classifications/mo</li>
+                <li className="flex items-center gap-2"><Check className="w-3.5 h-3.5 text-zinc-400" /> Custom Domains & SLA Support</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 bg-white border-b border-[#E5E5E0]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-6">
+          <div className="text-center">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-500">
+              Contractual & Technical FAQ
+            </span>
+            <h2 className="text-2xl font-semibold text-zinc-900 mt-1">Frequently Asked Questions</h2>
+          </div>
+
+          <div className="space-y-4 pt-4">
+            <div className="p-4 rounded border border-[#E5E5E0] bg-[#FBFBFA]">
+              <h4 className="text-xs font-bold text-zinc-900">Are ScopePilot AI determinations legally binding?</h4>
+              <p className="text-xs text-zinc-600 mt-1 leading-relaxed">
+                No. As stated in our business rules, AI scope analysis is advisory. It identifies discrepancies and quotes source clauses from your Statement of Work. Formal change orders require explicit authorization from an authorized human signatory.
+              </p>
+            </div>
+
+            <div className="p-4 rounded border border-[#E5E5E0] bg-[#FBFBFA]">
+              <h4 className="text-xs font-bold text-zinc-900">How do clients access change orders?</h4>
+              <p className="text-xs text-zinc-600 mt-1 leading-relaxed">
+                Clients receive a dedicated, time-limited, token-secured portal link. They do not need to create an account or install software. They can review the itemized scope and approve or decline with a digital confirmation.
+              </p>
+            </div>
+
+            <div className="p-4 rounded border border-[#E5E5E0] bg-[#FBFBFA]">
+              <h4 className="text-xs font-bold text-zinc-900">Can agreements be exported for accounting or legal files?</h4>
+              <p className="text-xs text-zinc-600 mt-1 leading-relaxed">
+                Yes. Every change order, deliverable checklist, and audit event ledger can be printed or exported as a clean PDF document with cryptographic timestamps and IP address records.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Editorial Footer */}
+      <footer className="py-8 px-4 sm:px-6 bg-[#FBFBFA] text-xs text-zinc-500">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-zinc-800 font-medium">
+            <span className="w-4 h-4 rounded bg-[#18181B] text-white flex items-center justify-center font-mono font-bold text-[10px]">
+              SP
+            </span>
+            <span>ScopePilot SaaS</span>
+            <span className="text-zinc-400">·</span>
+            <span className="text-zinc-500 font-normal">Scope Defense & Change Order Protocol</span>
+          </div>
+
+          <div className="flex items-center gap-4 text-zinc-500">
+            <Link href="/dashboard" className="hover:text-zinc-900">Workspace</Link>
+            <Link href="/pricing" className="hover:text-zinc-900">Pricing</Link>
+            <Link href="/portal/portal_meridian_live_demo" target="_blank" className="hover:text-zinc-900">Client Portal</Link>
           </div>
         </div>
       </footer>

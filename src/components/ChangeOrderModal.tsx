@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, Plus, Trash2, Calendar, DollarSign, Clock, FileText, Send, Check } from 'lucide-react';
+import { X, Plus, Trash2, Send, Check } from 'lucide-react';
 import { LineItem } from '@/lib/types';
 
 interface ChangeOrderModalProps {
@@ -31,6 +31,7 @@ export function ChangeOrderModal({
 }: ChangeOrderModalProps) {
   const [title, setTitle] = useState(initialTitle || 'Scope Extension Order');
   const [description, setDescription] = useState(initialDescription || '');
+  const [assumptions, setAssumptions] = useState('All work is subject to the terms of the Master Services Agreement. Standard 30-day warranty applies upon deployment.');
   const [scheduleDelayDays, setScheduleDelayDays] = useState(initialDelayDays);
   const [lineItems, setLineItems] = useState<LineItem[]>([
     {
@@ -82,14 +83,13 @@ export function ChangeOrderModal({
 
     try {
       if (requestId) {
-        // If linked to a request, use decision endpoint
         const res = await fetch(`/api/requests/${requestId}/decision`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             decision: 'create_change_order',
             orderTitle: title,
-            orderDescription: description,
+            orderDescription: `${description}\n\nAssumptions:\n${assumptions}`,
             lineItems,
             totalAmount,
             scheduleDelayDays,
@@ -100,7 +100,6 @@ export function ChangeOrderModal({
         if (!res.ok) throw new Error(data.error || 'Failed to create change order');
 
         if (sendImmediately && data.changeOrder?.id) {
-          // Immediately trigger sent status
           await fetch(`/api/change-orders/${data.changeOrder.id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
@@ -119,92 +118,106 @@ export function ChangeOrderModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-2xl w-full border border-zinc-200 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-        {/* Header */}
-        <div className="px-6 py-5 border-b border-zinc-200 flex items-center justify-between bg-zinc-50/50">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/35 flex items-center justify-center p-4">
+      <div className="bg-white rounded border border-[#E5E5E0] max-w-2xl w-full shadow-lg overflow-hidden animate-in fade-in duration-150">
+        {/* Document Header */}
+        <div className="px-6 py-4 border-b border-[#E5E5E0] flex items-center justify-between bg-[#FBFBFA]">
           <div>
             <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 text-xs font-semibold uppercase tracking-wider rounded bg-indigo-50 text-indigo-700 border border-indigo-200/60">
-                Formal Change Order
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-zinc-500">
+                Official Contract Addendum
               </span>
-              <span className="text-xs text-zinc-500 font-medium">Drafting</span>
+              <span className="text-zinc-300">/</span>
+              <span className="text-[11px] font-mono text-zinc-600">Drafting</span>
             </div>
-            <h2 className="text-lg font-bold text-zinc-900 mt-1">Generate Scope Change Order</h2>
+            <h2 className="text-base font-bold text-zinc-900 mt-0.5">Generate Scope Change Order</h2>
           </div>
-          <button onClick={onClose} className="p-2 text-zinc-400 hover:text-zinc-700 rounded-lg hover:bg-zinc-100">
-            <X className="w-5 h-5" />
+          <button onClick={onClose} className="p-1 text-zinc-400 hover:text-zinc-700 rounded hover:bg-zinc-100">
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Body */}
-        <div className="p-6 space-y-5 max-h-[75vh] overflow-y-auto">
+        {/* Document Body */}
+        <div className="p-6 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
           {error && (
-            <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs">
+            <div className="p-2.5 bg-rose-50 border border-rose-200 text-rose-700 rounded text-xs">
               {error}
             </div>
           )}
 
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
+            <label className="block text-[11px] font-semibold text-zinc-700 uppercase tracking-wider mb-1">
               Change Order Title
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3.5 py-2 text-sm border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 bg-white"
+              className="w-full px-3 py-1.5 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0] bg-white font-medium"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-zinc-700 uppercase tracking-wider mb-1.5">
-              Scope of Adjustment / Description
+            <label className="block text-[11px] font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+              Scope of Adjustment & Deliverable Boundaries
             </label>
             <textarea
               rows={3}
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Explain the new deliverable and technical boundary..."
-              className="w-full px-3.5 py-2 text-sm border border-zinc-200 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 bg-white"
+              placeholder="Detail the technical additions, specifications, and scope limits..."
+              className="w-full p-2.5 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0] bg-white leading-relaxed"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[11px] font-semibold text-zinc-700 uppercase tracking-wider mb-1">
+              Contractual Assumptions & Exclusions
+            </label>
+            <textarea
+              rows={2}
+              value={assumptions}
+              onChange={(e) => setAssumptions(e.target.value)}
+              placeholder="State key assumptions or prerequisites..."
+              className="w-full p-2.5 text-xs border border-[#E5E5E0] rounded focus:outline-hidden focus:border-[#2547D0] bg-[#FBFBFA] font-mono text-[11px]"
             />
           </div>
 
           {/* Line items table */}
           <div>
-            <div className="flex items-center justify-between mb-2">
-              <label className="text-xs font-semibold text-zinc-700 uppercase tracking-wider">
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-[11px] font-semibold text-zinc-700 uppercase tracking-wider">
                 Billable Scope Line Items
               </label>
               <button
                 type="button"
                 onClick={addLineItem}
-                className="inline-flex items-center gap-1 text-xs font-medium text-indigo-600 hover:text-indigo-800"
+                className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2547D0] hover:text-[#1D3BB3]"
               >
-                <Plus className="w-3.5 h-3.5" /> Add Item
+                <Plus className="w-3 h-3" /> Add Item
               </button>
             </div>
 
-            <div className="border border-zinc-200 rounded-xl overflow-hidden">
+            <div className="border border-[#E5E5E0] rounded overflow-hidden">
               <table className="w-full text-left text-xs">
-                <thead className="bg-zinc-50 border-b border-zinc-200 text-zinc-500">
+                <thead className="bg-[#FBFBFA] border-b border-[#E5E5E0] text-zinc-500 font-semibold text-[11px]">
                   <tr>
-                    <th className="py-2.5 px-3 font-semibold">Description</th>
-                    <th className="py-2.5 px-2 font-semibold w-20">Hours</th>
-                    <th className="py-2.5 px-2 font-semibold w-24">Rate ($)</th>
-                    <th className="py-2.5 px-3 font-semibold w-28 text-right">Amount</th>
-                    <th className="py-2.5 px-2 w-10"></th>
+                    <th className="py-2 px-3">Description</th>
+                    <th className="py-2 px-2 w-16">Hours</th>
+                    <th className="py-2 px-2 w-20">Rate ($)</th>
+                    <th className="py-2 px-3 w-24 text-right">Amount</th>
+                    <th className="py-2 px-2 w-8"></th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-200 bg-white">
+                <tbody className="divide-y divide-zinc-200 bg-white font-mono text-xs">
                   {lineItems.map((item, idx) => (
                     <tr key={item.id}>
-                      <td className="p-2">
+                      <td className="p-2 font-sans">
                         <input
                           type="text"
                           value={item.description}
                           onChange={(e) => handleItemChange(idx, 'description', e.target.value)}
-                          className="w-full px-2 py-1 border border-zinc-200 rounded focus:border-indigo-600 focus:outline-hidden text-xs"
+                          className="w-full px-2 py-1 border border-[#E5E5E0] rounded focus:border-[#2547D0] focus:outline-hidden text-xs"
                         />
                       </td>
                       <td className="p-2">
@@ -212,7 +225,7 @@ export function ChangeOrderModal({
                           type="number"
                           value={item.hours}
                           onChange={(e) => handleItemChange(idx, 'hours', Number(e.target.value))}
-                          className="w-full px-2 py-1 border border-zinc-200 rounded focus:border-indigo-600 focus:outline-hidden text-xs"
+                          className="w-full px-1.5 py-1 border border-[#E5E5E0] rounded focus:border-[#2547D0] focus:outline-hidden text-xs tabular-nums text-center"
                         />
                       </td>
                       <td className="p-2">
@@ -220,10 +233,10 @@ export function ChangeOrderModal({
                           type="number"
                           value={item.rate}
                           onChange={(e) => handleItemChange(idx, 'rate', Number(e.target.value))}
-                          className="w-full px-2 py-1 border border-zinc-200 rounded focus:border-indigo-600 focus:outline-hidden text-xs"
+                          className="w-full px-1.5 py-1 border border-[#E5E5E0] rounded focus:border-[#2547D0] focus:outline-hidden text-xs tabular-nums text-center"
                         />
                       </td>
-                      <td className="p-2 text-right font-medium text-zinc-900 pr-3">
+                      <td className="p-2 text-right font-medium text-zinc-900 pr-3 tabular-nums">
                         ${(item.amount || 0).toLocaleString()}
                       </td>
                       <td className="p-2 text-center">
@@ -244,11 +257,11 @@ export function ChangeOrderModal({
             </div>
           </div>
 
-          {/* Timeline & Total summary */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-zinc-50 border border-zinc-200">
+          {/* Timeline Impact & Commercial Total */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded bg-[#FBFBFA] border border-[#E5E5E0]">
             <div>
-              <label className="block text-xs font-medium text-zinc-700 mb-1">
-                Estimated Delivery Delay
+              <label className="block text-[11px] font-medium text-zinc-700 mb-1">
+                Estimated Delivery Schedule Extension
               </label>
               <div className="flex items-center gap-2">
                 <input
@@ -256,31 +269,31 @@ export function ChangeOrderModal({
                   min="0"
                   value={scheduleDelayDays}
                   onChange={(e) => setScheduleDelayDays(Number(e.target.value))}
-                  className="w-24 px-3 py-1.5 text-sm border border-zinc-200 rounded-lg bg-white"
+                  className="w-20 px-2 py-1 text-xs font-mono border border-[#E5E5E0] rounded bg-white text-center tabular-nums"
                 />
-                <span className="text-xs text-zinc-500">business days added</span>
+                <span className="text-[11px] text-zinc-500">business days added</span>
               </div>
             </div>
 
-            <div className="flex flex-col justify-center sm:items-end">
-              <span className="text-xs text-zinc-500 font-medium">Total Additional Price</span>
-              <span className="text-2xl font-bold text-zinc-900 tracking-tight">
-                ${totalAmount.toLocaleString()} <span className="text-xs text-zinc-500 font-normal">USD</span>
+            <div className="flex flex-col justify-center sm:items-end font-mono">
+              <span className="text-[10px] text-zinc-400 uppercase font-sans">Total Commercial Addition</span>
+              <span className="text-xl font-bold text-[#18181B] tabular-nums">
+                ${totalAmount.toLocaleString()} <span className="text-xs text-zinc-400 font-normal">USD</span>
               </span>
             </div>
           </div>
 
-          <p className="text-[11px] text-zinc-400 italic">
-            * This document serves as an official scope adjustment. When sent to the client, a secure sign-off link with cryptographic timestamping will be generated.
-          </p>
+          <div className="text-[11px] text-zinc-400 font-mono">
+            * Recorded into the immutable audit ledger. Generating a link creates a single-use tokenized sign-off interface.
+          </div>
         </div>
 
-        {/* Footer */}
-        <div className="px-6 py-4 border-t border-zinc-200 bg-zinc-50/50 flex items-center justify-between">
+        {/* Footer actions */}
+        <div className="px-6 py-3 border-t border-[#E5E5E0] bg-[#FBFBFA] flex items-center justify-between">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-medium text-zinc-600 hover:text-zinc-900"
+            className="text-xs font-medium text-zinc-500 hover:text-zinc-800"
           >
             Cancel
           </button>
@@ -290,7 +303,7 @@ export function ChangeOrderModal({
               type="button"
               disabled={submitting}
               onClick={() => handleSubmit(false)}
-              className="px-4 py-2 text-xs font-medium text-zinc-700 bg-white border border-zinc-200 rounded-lg hover:bg-zinc-50 shadow-xs transition-colors"
+              className="px-3 py-1.5 text-xs font-medium text-zinc-700 bg-white border border-[#E5E5E0] rounded hover:bg-zinc-50 transition-colors"
             >
               Save as Draft
             </button>
@@ -298,9 +311,9 @@ export function ChangeOrderModal({
               type="button"
               disabled={submitting}
               onClick={() => handleSubmit(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-1.5 text-xs font-semibold text-white bg-[#2547D0] hover:bg-[#1D3BB3] rounded shadow-2xs transition-colors"
             >
-              <Send className="w-3.5 h-3.5" />
+              <Send className="w-3 h-3" />
               <span>{submitting ? 'Creating...' : 'Create & Send to Client'}</span>
             </button>
           </div>
